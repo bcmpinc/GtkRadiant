@@ -2882,8 +2882,9 @@ void DoCommandListDlg ()
 
         if (fileout != NULL)
         {
-          strLine.Format("%-25s %s\r\n", g_Commands[n].m_strCommand, strMod.GetBuffer ());
-          fputs (strLine.GetBuffer (), fileout);
+			// AEon: commandlist.txt contains \r\r\n at end of each line, removing below \r
+			strLine.Format("%-25s %s\n", g_Commands[n].m_strCommand, strMod.GetBuffer ());
+			fputs (strLine.GetBuffer (), fileout);
         }
 
         cmds = g_slist_remove (cmds, cmds->data);
