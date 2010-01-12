@@ -3608,6 +3608,8 @@ void MainFrame::LoadCommandMap()
             continue;
           if (g_Commands[i].m_nKey == g_Commands[j].m_nKey && g_Commands[i].m_nModifiers == g_Commands[j].m_nModifiers)
           {
+            // help debugging keys
+            Sys_Printf("  Shortcut %s overrides an existing default binding!\n", value);
             // found!
             g_Commands[j].m_nKey = 0;
             // verbose
@@ -3619,7 +3621,7 @@ void MainFrame::LoadCommandMap()
       }
     }
     if (iOverrideCount)
-      Sys_Printf("User's command list overrides %d default commands\n", iOverrideCount);
+      Sys_Printf("  User's command list overrides %d default commands.\n", iOverrideCount);
     Sys_Printf("Parsed %d custom shortcuts\n", iCount );
   }
   else

@@ -2864,13 +2864,14 @@ void DoCommandListDlg ()
           }
         }
 
+		// AEon: More common "Ctrl" abbreviation, and Ctrl+Shift+Alt qualifier order
+		if (g_Commands[n].m_nModifiers & RAD_CONTROL)
+          strMod = "Ctrl";
         if (g_Commands[n].m_nModifiers & RAD_SHIFT)
-          strMod = "Shift";
+          strMod += (strMod.GetLength() > 0) ? " + Shift" : "Shift";
         if (g_Commands[n].m_nModifiers & RAD_ALT)
           strMod += (strMod.GetLength() > 0) ? " + Alt" : "Alt";
-        if (g_Commands[n].m_nModifiers & RAD_CONTROL)
-          strMod += (strMod.GetLength() > 0) ? " + Control" : "Control";
-        if (strMod.GetLength() > 0)
+		if (strMod.GetLength() > 0)
           strMod += " + ";
         strMod += strKeys;
 
@@ -2882,8 +2883,8 @@ void DoCommandListDlg ()
 
         if (fileout != NULL)
         {
-			// AEon: commandlist.txt contains \r\r\n at end of each line, removing below \r
-			strLine.Format("%-25s %s\n", g_Commands[n].m_strCommand, strMod.GetBuffer ());
+			// AEon: commandlist.txt contains \r\r\n at end of each line, removing a \r
+			strLine.Format("%-27s %s\n", g_Commands[n].m_strCommand, strMod.GetBuffer ());
 			fputs (strLine.GetBuffer (), fileout);
         }
 
