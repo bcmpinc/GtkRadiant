@@ -3512,6 +3512,7 @@ void MainFrame::OnDestroy ()
 }
 
 // TTimo: now using profile.cpp code
+// AEon: TODO - allow the same command to be mapped to different keys (see Patch TAB) via shortcuts.ini.
 void MainFrame::LoadCommandMap()
 {
   FILE *f;
@@ -3622,7 +3623,7 @@ void MainFrame::LoadCommandMap()
     }
     if (iOverrideCount)
       Sys_Printf("  User's command list overrides %d default commands.\n", iOverrideCount);
-    Sys_Printf("Parsed %d custom shortcuts\n", iCount );
+    Sys_Printf("  Parsed %d custom shortcuts\n", iCount );
   }
   else
     Sys_Printf("Looked for a '%s' keyboard shortcuts file, not found\n", strINI.GetBuffer());

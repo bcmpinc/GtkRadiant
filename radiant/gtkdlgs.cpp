@@ -2832,9 +2832,12 @@ void DoCommandListDlg ()
 
     {
       // Initialize dialog
-      CString path;
+      CString path, path2;
       path = g_strTempPath;
       path += "commandlist.txt";
+	  // AEon: Save current keys in shortcut.ini format.
+	  path2 = g_strTempPath;
+      path2 += "shortcut_cmd.txt";
 
       GSList *cmds = NULL;
       int n;
@@ -2843,8 +2846,17 @@ void DoCommandListDlg ()
         cmds = g_slist_append (cmds, g_Commands[n].m_strCommand);
       cmds = g_slist_sort (cmds, (gint (*)(const void *, const void *))strcmp);
 
-      Sys_Printf("Writing the command list to %s", path.GetBuffer() );
+      Sys_Printf("Writing command list to %s\n", path.GetBuffer() );
       FILE* fileout = fopen (path.GetBuffer (), "wt");
+
+      Sys_Printf("Writing command list in shortcut.ini format to %s\n", path2.GetBuffer() );
+      FILE* fileout2 = fopen (path2.GetBuffer (), "wt");
+      if (fileout2 != NULL)
+      {
+        fputs ( ";AEon: Automatically created Command List in shortcut.ini format.\n", fileout2);
+        fputs ( ";      Update this file via editor Help menu, Shortcuts list.\n", fileout2);
+        fputs ( ";      (DO NOT EDIT! Copy/paste required command lines into your shortcuts.ini.)\n", fileout2);
+      }
 
       while (cmds)
       {
@@ -2853,7 +2865,7 @@ void DoCommandListDlg ()
 	    break;
 
         char c = g_Commands[n].m_nKey;
-        CString strLine, strMod(""), strKeys (c);
+        CString strLine, strMod(""), strMod2(""), strKeys (c);
 
         for (int k = 0; k < g_nKeyCount; k++)
         {
@@ -2864,13 +2876,23 @@ void DoCommandListDlg ()
           }
         }
 
-		// AEon: More common "Ctrl" abbreviation, and Ctrl+Shift+Alt qualifier order
+		// AEon: More common: "Ctrl" abbreviation, and Ctrl+Shift+Alt qualifier order
+        strMod2 = strKeys;							// AEon: key[+qualifier] format
 		if (g_Commands[n].m_nModifiers & RAD_CONTROL)
+		{
           strMod = "Ctrl";
+          strMod2 += "+Ctrl";
+		}
         if (g_Commands[n].m_nModifiers & RAD_SHIFT)
+		{
           strMod += (strMod.GetLength() > 0) ? " + Shift" : "Shift";
+          strMod2 += "+Shift";
+		}
         if (g_Commands[n].m_nModifiers & RAD_ALT)
+		{
           strMod += (strMod.GetLength() > 0) ? " + Alt" : "Alt";
+          strMod2 += "+Alt";
+		}
 		if (strMod.GetLength() > 0)
           strMod += " + ";
         strMod += strKeys;
@@ -2887,12 +2909,19 @@ void DoCommandListDlg ()
 			strLine.Format("%-27s %s\n", g_Commands[n].m_strCommand, strMod.GetBuffer ());
 			fputs (strLine.GetBuffer (), fileout);
         }
-
+        if (fileout2 != NULL)
+        {
+			// AEon: shortcuts.ini format: Command=key[+qualifier]
+			strLine.Format("%s=%s\n", g_Commands[n].m_strCommand, strMod2.GetBuffer ());
+			fputs (strLine.GetBuffer (), fileout2);
+        }
         cmds = g_slist_remove (cmds, cmds->data);
       }
 
       if (fileout != NULL)
         fclose (fileout);
+      if (fileout2 != NULL)
+        fclose (fileout2);
     }
 
     g_object_unref(G_OBJECT(store));
