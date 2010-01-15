@@ -2897,6 +2897,8 @@ void DoCommandListDlg ()
           strMod += " + ";
         strMod += strKeys;
 
+        // AEon: Only show commands bound to keys in the Shortcuts list window.
+		if (strMod.GetLength() > 0)
         {
           GtkTreeIter iter;
           gtk_list_store_append(store, &iter);
