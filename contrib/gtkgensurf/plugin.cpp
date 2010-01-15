@@ -43,8 +43,8 @@ const char* QERPlug_GetName ()
 
 const char* QERPlug_GetCommandList ()
 {
-  return "Wall facing 270...;Wall facing 180...;Wall facing 90...;Wall facing 0...;"
-         "Ceiling...;Ground surface...;-;About...";
+  return "Wall Facing 270...;Wall Facing 180...;Wall Facing 90...;Wall Facing 0...;"
+         "Ceiling...;Ground Surface...;-;About...";
 }
 
 // vMin/vMax provide the bounds of the selection, they are zero if there is no selection
@@ -61,7 +61,7 @@ void QERPlug_Dispatch (const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
       g_bInitDone = true;
   }
 
-  if (!strcmp (p, "Ground surface..."))
+  if (!strcmp (p, "Ground Surface..."))
   {
     SingleBrushSelected = bSingleBrush;
     Plane = PLANE_XY0;
@@ -89,7 +89,7 @@ void QERPlug_Dispatch (const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
     }
     Generate = true;
   }
-  else if (!strcmp (p, "Wall facing 0..."))
+  else if (!strcmp (p, "Wall Facing 0..."))
   {
     SingleBrushSelected = bSingleBrush;
     Plane = PLANE_YZ0;
@@ -103,7 +103,7 @@ void QERPlug_Dispatch (const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
     }
     Generate = true;
   }
-  else if (!strcmp (p, "Wall facing 90..."))
+  else if (!strcmp (p, "Wall Facing 90..."))
   {
     SingleBrushSelected = bSingleBrush;
     Plane = PLANE_XZ0;
@@ -117,7 +117,7 @@ void QERPlug_Dispatch (const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
     }
     Generate = true;
   }
-  else if (!strcmp (p, "Wall facing 180..."))
+  else if (!strcmp (p, "Wall Facing 180..."))
   {
     SingleBrushSelected = bSingleBrush;
     Plane = PLANE_YZ1;
@@ -131,7 +131,7 @@ void QERPlug_Dispatch (const char *p, vec3_t vMin, vec3_t vMax, bool bSingleBrus
     }
     Generate = true;
   }
-  else if (!strcmp (p, "Wall facing 270..."))
+  else if (!strcmp (p, "Wall Facing 270..."))
   {
     SingleBrushSelected = bSingleBrush;
     Plane = PLANE_XZ1;

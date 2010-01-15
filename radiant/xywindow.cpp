@@ -1551,9 +1551,9 @@ void XYWnd::HandleDrop()
     create_menu_item_with_mnemonic (menu, "Ungroup Entity",
               GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_UNGROUPENTITY);
 
-    create_menu_item_with_mnemonic (menu, "Move into entity",
+    create_menu_item_with_mnemonic (menu, "Move into Entity",
       GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MERGE);
-    create_menu_item_with_mnemonic (menu, "Move into worldspawn",
+    create_menu_item_with_mnemonic (menu, "Move into Worldspawn",
       GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SEPERATE);
 
     create_menu_item_with_mnemonic (menu, "Make Detail",

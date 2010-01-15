@@ -333,7 +333,7 @@ void UpdateWadKeyPair( void )
 const char *PLUGIN_NAME = "HydraToolz";
 
 // commands in the menu
-const char *PLUGIN_COMMANDS = "About...;Create/Update WAD keypair";
+const char *PLUGIN_COMMANDS = "About...;Create/Update WAD Keypair";
 
 const char *PLUGIN_ABOUT = "HydraToolz v1.0 for GTKRadiant\n\n"
                            "By Hydra!";
@@ -360,7 +360,7 @@ const char* QERPlug_GetCommandList()
 
 extern "C" void QERPlug_Dispatch(const char* p, vec3_t vMin, vec3_t vMax, bool bSingleBrush)
 {
-	if(!strcmp(p, "Create/Update WAD keypair"))
+	if(!strcmp(p, "Create/Update WAD Keypair"))
 		UpdateWadKeyPair();
 	else if(!strcmp(p, "About..."))
 		g_FuncTable.m_pfnMessageBox(NULL, PLUGIN_ABOUT, "About", MB_OK, NULL);
