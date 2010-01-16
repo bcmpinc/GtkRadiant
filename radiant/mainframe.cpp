@@ -101,13 +101,13 @@ void Select_Ungroup ();
 // Command Mapping stuff
 //
 // m_strCommand is the command string
-// m_nKey is the GDK_??? equivelant - AEon: set to 0 for a command without defined key
+// m_nKey is the GDK_??? equivelant - AEon: Set to 0 for a command without defined key.
 // m_nModifiers are key states as follows
 //  bit
-//    1 - shift         RAD_SHIFT
-//    2 - alt           RAD_ALT
-//    4 - control       RAD_CONTROL
-//    8 - press only    RAD_PRESS
+//   0   1 - shift         RAD_SHIFT
+//   1   2 - alt           RAD_ALT
+//   2   4 - control       RAD_CONTROL
+//   3   8 - press only    RAD_PRESS
 //
 #define	SPEED_MOVE	32
 #define	SPEED_TURN	22.5
@@ -116,235 +116,242 @@ void Select_Ungroup ();
 // - if you add a command here and you don't want a menu item, use the "hidden" menu
 // - if you decide to add a menu item, check if it's not in the "hidden" menu already
 // AEon: Qualifiers using RAD_ variables for better readability.
-//       Test:  {"FileNew",					0, 0,									ID_FILE_NEW, "menu_file_new"},
+//       Lines with menu entry comments have a new command name for shortcuts.ini.
 SCommandInfo g_Commands[] =
 {
-// === File ===
-// New Map
-  {"Sleep",						'P', RAD_CONTROL|RAD_SHIFT,				ID_FILE_SLEEP, "menu_file_sleep"},
-  {"FileOpen",					'O', RAD_CONTROL,						ID_FILE_OPEN, "menu_file_open"},
-// Import...
-  {"FileSave",					'S', RAD_CONTROL,						ID_FILE_SAVE, "menu_file_save"},
-// Save as...
-// Save Selected...
-// Save Region...
-// New Project...
-// Load Project...
-// Project Settings...
-  {"LoadPointfile",				'L', RAD_SHIFT,							ID_FILE_POINTFILE, "menu_load_pointfile"},
-//*Check for GtkRadiant update (web)
-  //% {"Exit",					'X', RAD_CONTROL,						ID_FILE_EXIT, "menu_file_exit"}, // ydnar: Ctrl+X should be cut, AEon: try Ctrl+Q
+// === File menu ===
+  {"FileNew",				0, 0,						ID_FILE_NEW, "menu_file_new"},							// New Map
+  {"Sleep",					'P', RAD_CONTROL|RAD_SHIFT,	ID_FILE_SLEEP, "menu_file_sleep"},
+  {"FileOpen",				'O', RAD_CONTROL,			ID_FILE_OPEN, "menu_file_open"},
+  {"FileImportMap",			0, 0,						ID_FILE_IMPORTMAP, "menu_file_importmap"},				// Import...
+  {"FileSave",				'S', RAD_CONTROL,			ID_FILE_SAVE, "menu_file_save"},
+  {"FileSaveAs",			0, 0,						ID_FILE_SAVEAS, "menu_file_saveas"},					// Save as...
+  {"FileExportMap",			0, 0,						ID_FILE_EXPORTMAP, "menu_file_exportmap"},				// Save Selected...
+  {"FileSaveRegion",		0, 0,						ID_FILE_SAVEREGION, "menu_file_saveregion"},			// Save Region...
+  {"FileNewProject",		0, 0,						ID_FILE_NEWPROJECT, "menu_file_newproject"},			// New Project...
+  {"FileLoadProject",		0, 0,						ID_FILE_LOADPROJECT, "menu_file_loadproject"},			// Load Project...
+  {"FileProjectSettings",	0, 0,						ID_FILE_PROJECTSETTINGS, "menu_file_projectsettings"},	// Project Settings...
+  {"LoadPointfile",			'L', RAD_SHIFT,				ID_FILE_POINTFILE, "menu_load_pointfile"},
+  // Recent Files (1-4)																							// ***Ignored for now.
+  // Check for GtkRadiant Update (Web)																			// ***Ignored - function unavailable.
+  {"Exit",					'Q', RAD_CONTROL,			ID_FILE_EXIT, "menu_file_exit"},
 
-// === Edit ===
-  {"Undo",						'Z', RAD_CONTROL,						ID_EDIT_UNDO, "menu_edit_undo"},
-  {"Redo",						'Y', RAD_CONTROL,						ID_EDIT_REDO, "menu_edit_redo"},
-  {"Copy",						'C', RAD_CONTROL,						ID_EDIT_COPYBRUSH, "menu_edit_copybrush"},
-  {"Paste",						'V', RAD_CONTROL,						ID_EDIT_PASTEBRUSH, "menu_edit_pastebrush"},
-  {"PasteToCamera",				'V', RAD_ALT,							ID_EDIT_PASTEBRUSHTOCAMERA, "menu_edit_pastebrushtocamera"},
-// Delete
-  {"MapInfo",					'M', 0,									ID_EDIT_MAPINFO, "menu_edit_mapinfo"},
-  {"EntityList",				'L', 0,									ID_EDIT_ENTITYINFO, "menu_edit_entityinfo"},
-// Brush Scripts...		***Should be ghosted
-// Load Prefab...
-// Save Selection as Prefab...
-  {"Preferences",				'P', 0,									ID_PREFS, "menu_prefs"},
 
-// === View ===
+// === Edit menu ===
+  {"Undo",			'Z', RAD_CONTROL,	ID_EDIT_UNDO, "menu_edit_undo"},
+  {"Redo",			'Y', RAD_CONTROL,	ID_EDIT_REDO, "menu_edit_redo"},
+  {"Copy",			'C', RAD_CONTROL,	ID_EDIT_COPYBRUSH, "menu_edit_copybrush"},
+  {"Paste",			'V', RAD_CONTROL,	ID_EDIT_PASTEBRUSH, "menu_edit_pastebrush"},
+  {"PasteToCamera",	'V', RAD_ALT,		ID_EDIT_PASTEBRUSHTOCAMERA, "menu_edit_pastebrushtocamera"},
+  {"Delete",		0, 0,				ID_SELECTION_DELETE, "menu_selection_delete"},	// Delete (command alias for DeleteSelection)
+  {"MapInfo",		'M', 0,				ID_EDIT_MAPINFO, "menu_edit_mapinfo"},
+  {"EntityList",	'L', 0,				ID_EDIT_ENTITYINFO, "menu_edit_entityinfo"},
+  // Brush Scripts...																	// ***Ignored - function not implemented.
+  {"LoadPrefab",	0, 0,				ID_EDIT_LOADPREFAB, "menu_edit_loadprefab"},	// Load Prefab...
+  {"SavePrefab",	0, 0,				ID_EDIT_SAVEPREFAB, "menu_edit_saveprefab"},	// Save Selection as Prefab...
+  {"Preferences",	'P', 0,				ID_PREFS, "menu_prefs"},
+
+
+// === View menu ===
   // -- Toggle --
-  {"ToggleCamera",				'C', RAD_CONTROL|RAD_SHIFT,				ID_TOGGLECAMERA, "menu_togglecamera"},
-  //  {"ViewConsole",			'O', 0,									ID_VIEW_CONSOLE, "menu_0,"},
-  {"ToggleConsole",				'O', 0,									ID_TOGGLECONSOLE, "menu_toggleconsole"},
-  {"ViewEntityInfo",			'N', 0,									ID_VIEW_ENTITY, "menu_view_entity"},
-  {"ToggleView",				'V', RAD_CONTROL|RAD_SHIFT,				ID_TOGGLEVIEW, "menu_toggleview"},
-  // YZ (Side)
-  // XZ (Front)
-  {"ToggleZ",					'Z', RAD_CONTROL|RAD_SHIFT,				ID_TOGGLEZ, "menu_togglez"},
+  {"ToggleCamera",			'C', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLECAMERA, "menu_togglecamera"},
+  //  {"ViewConsole",		'O', 0,							ID_VIEW_CONSOLE, "menu_0,"},				// ***AEon: Deprecated?
+  {"ToggleConsole",			'O', 0,							ID_TOGGLECONSOLE, "menu_toggleconsole"},
+  {"ViewEntityInfo",		'N', 0,							ID_VIEW_ENTITY, "menu_view_entity"},
+  {"ToggleView",			'V', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLEVIEW, "menu_toggleview"},
+  {"ToggleViewYZ",			0, 0,							ID_TOGGLEVIEW_YZ, "menu_toggleview_yz"},	// YZ (Side)
+  {"ToggleViewXZ",			0, 0,							ID_TOGGLEVIEW_XZ, "menu_toggleview_xz"},	// XZ (Front)
+  {"ToggleZ",				'Z', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLEZ, "menu_togglez"},
 
-  {"CenterView",				GDK_End, 0,								ID_VIEW_CENTER, "menu_view_center"},
-  // Center 2d
-  {"UpFloor",					GDK_Prior, 0,							ID_VIEW_UPFLOOR, "menu_view_upfloor"},
-  {"DownFloor",					GDK_Next, 0,							ID_VIEW_DOWNFLOOR, "menu_view_downfloor"},
-  // Next (XY, YZ, XY)	***fix (is ,XZ)
+  {"CenterView",			GDK_End, 0,						ID_VIEW_CENTER, "menu_view_center"},
+  {"CenterXYView",			GDK_Tab, RAD_CONTROL|RAD_SHIFT,	ID_VIEW_CENTERVIEW, "menu_view_centerview"},
+  {"UpFloor",				GDK_Prior, 0,					ID_VIEW_UPFLOOR, "menu_view_upfloor"},
+  {"DownFloor",				GDK_Next, 0,					ID_VIEW_DOWNFLOOR, "menu_view_downfloor"},
+  {"NextView",				GDK_Tab, RAD_CONTROL,			ID_VIEW_NEXTVIEW, "menu_view_nextview"},
 
   // -- Layout --
-  // XY (Top)
-  // YZ					*** (Side)
-  // XZ         		*** (Front)
+  {"ViewTopXY",				0, 0,							ID_VIEW_XY, "menu_view_xy"},				// XY (Top)
+  {"ViewSideYZ",			0, 0,							ID_VIEW_SIDE, "menu_view_side"},			// YZ (Side)
+  {"ViewFrontXZ",			0, 0,							ID_VIEW_FRONT, "menu_view_front"},			// XZ (Front)
 
   // -- Zoom --
-  // XY 100%
-  {"ZoomIn",					GDK_Delete, 0,							ID_VIEW_ZOOMIN, "menu_view_zoomin"},
-  {"ZoomOut",					GDK_Insert, 0,							ID_VIEW_ZOOMOUT, "menu_view_zoomout"},
-  // Z 100%
-  {"ZZoomIn",					GDK_Delete, RAD_CONTROL,				ID_VIEW_ZZOOMIN, "menu_view_zzoomin"},
-  {"ZZoomOut",					GDK_Insert, RAD_CONTROL,				ID_VIEW_ZZOOMOUT, "menu_view_zzoomout"},
-  {"CubicClipZoomIn",			'[', RAD_CONTROL,						ID_VIEW_CUBEIN, "menu_view_cubein"},
-  {"CubicClipZoomOut",			']', RAD_CONTROL,						ID_VIEW_CUBEOUT, "menu_view_cubeout"},
+  {"Zoom100",				0, 0,							ID_VIEW_100, "menu_view_100"},				// XY 100%
+  {"ZoomIn",				GDK_Delete, 0,					ID_VIEW_ZOOMIN, "menu_view_zoomin"},
+  {"ZoomOut",				GDK_Insert, 0,					ID_VIEW_ZOOMOUT, "menu_view_zoomout"},
+  {"ZZoom100",				0, 0,							ID_VIEW_Z100, "menu_view_z100"},			// Z 100%
+  {"ZZoomIn",				GDK_Delete, RAD_CONTROL,		ID_VIEW_ZZOOMIN, "menu_view_zzoomin"},
+  {"ZZoomOut",				GDK_Insert, RAD_CONTROL,		ID_VIEW_ZZOOMOUT, "menu_view_zzoomout"},
+  {"CubicClipZoomIn",		'[', RAD_CONTROL,				ID_VIEW_CUBEIN, "menu_view_cubein"},
+  {"CubicClipZoomOut",		']', RAD_CONTROL,				ID_VIEW_CUBEOUT, "menu_view_cubeout"},
 
   // -- Show --
-  // Show Angles
-  // Show Names
-  // Show Blocks
-  // Show Coordinates
-  // Show Window Output
-  // Show ZBuffered Outline  ***Z-Buffered
-  // Show Axes
-  // Show Workzone
+  {"ShowAngles",			0, 0,							ID_VIEW_SHOWANGLES, "menu_view_showangles"},			// Show Angles
+  {"ShowNames",				0, 0,							ID_VIEW_SHOWNAMES, "menu_view_shownames"},				// Show Names
+  {"ShowBlocks",			0, 0,							ID_VIEW_SHOWBLOCKS, "menu_view_showblocks"},			// Show Blocks
+  {"ShowCoordinates",		0, 0,							ID_VIEW_SHOWCOORDINATES, "menu_view_showcoordinates"},	// Show Coordinates
+  {"ShowOutline",			0, 0,							ID_VIEW_SHOWOUTLINE, "menu_view_showoutline"},			// Show Window Output
+  {"SelectionNoOutline",	0, 0,							ID_SELECTION_NOOUTLINE, "menu_selection_nooutline"},	// Show Z-Buffered Outline
+  {"ShowAxes",				0, 0,							ID_VIEW_SHOWAXES, "menu_view_showaxes"},				// Show Axes
+  {"ShowWorkZone",			0, 0,							ID_VIEW_SHOWWORKZONE, "menu_view_showworkzone"},		// Show Workzone
 
   // -- Filters --
-  {"FilterWorldBrushes",		'1', RAD_ALT,							ID_FILTER_WORLD, "menu_filter_world"},
-  {"FilterEntities",			'2', RAD_ALT,							ID_FILTER_ENTITIES, "menu_filter_entities"},
-  {"FilterAreaportals",			'3', RAD_ALT,							ID_FILTER_AREAPORTALS, "menu_filter_areaportals"},
-  {"FilterTranslucent",			'4', RAD_ALT,							ID_FILTER_TRANSLUCENT, "menu_filter_translucent"},
-  {"FilterLiquids",				'5', RAD_ALT,							ID_FILTER_LIQUIDS, "menu_filter_liquids"},
-  {"FilterCaulk",				'6', RAD_ALT ,							ID_FILTER_CAULK, "menu_filter_caulk"},
-  {"FilterClips",				'7', RAD_ALT,							ID_FILTER_CLIPS, "menu_filter_clips"},
-  {"FilterPaths",				'8', RAD_ALT,							ID_FILTER_PATHS, "menu_filter_paths"},
-  {"FilterClusterportals",		'9', RAD_ALT,							ID_FILTER_CLUSTERPORTALS, "menu_filter_clusterportals"},
-  {"FilterLights",				'0', RAD_ALT,							ID_FILTER_LIGHTS, "menu_filter_lights"},
-  {"FilterStructural",			'D', RAD_CONTROL|RAD_SHIFT,				ID_FILTER_STRUCTURAL, "menu_filter_structural"},
-  // Lightgrid
-  {"FilterPatches",				'P', RAD_CONTROL,						ID_FILTER_PATCHES, "menu_filter_patches"},
-  {"FilterDetails",				'D', RAD_CONTROL,						ID_FILTER_DETAILS, "menu_filter_details"},
-  {"FilterHintsSkips",			'H', RAD_CONTROL,						ID_FILTER_HINTSSKIPS, "menu_filter_hintsskips"},
-  {"FilterModels",				'M', RAD_SHIFT,							ID_FILTER_MODELS, "menu_filter_models"},
-  {"FilterTriggers",			'T', RAD_CONTROL|RAD_SHIFT,				ID_FILTER_TRIGGERS, "menu_filter_triggers"},
-  {"FilterBotClips",			'M', RAD_ALT,							ID_FILTER_BOTCLIPS, "menu_filter_botclips"},
+  {"FilterWorldBrushes",	'1', RAD_ALT,					ID_FILTER_WORLD, "menu_filter_world"},
+  {"FilterEntities",		'2', RAD_ALT,					ID_FILTER_ENTITIES, "menu_filter_entities"},
+  {"FilterAreaportals",		'3', RAD_ALT,					ID_FILTER_AREAPORTALS, "menu_filter_areaportals"},
+  {"FilterTranslucent",		'4', RAD_ALT,					ID_FILTER_TRANSLUCENT, "menu_filter_translucent"},
+  {"FilterLiquids",			'5', RAD_ALT,					ID_FILTER_LIQUIDS, "menu_filter_liquids"},
+  {"FilterCaulk",			'6', RAD_ALT ,					ID_FILTER_CAULK, "menu_filter_caulk"},
+  {"FilterClips",			'7', RAD_ALT,					ID_FILTER_CLIPS, "menu_filter_clips"},
+  {"FilterPaths",			'8', RAD_ALT,					ID_FILTER_PATHS, "menu_filter_paths"},
+  {"FilterClusterportals",	'9', RAD_ALT,					ID_FILTER_CLUSTERPORTALS, "menu_filter_clusterportals"},
+  {"FilterLights",			'0', RAD_ALT,					ID_FILTER_LIGHTS, "menu_filter_lights"},
+  {"FilterStructural",		'D', RAD_CONTROL|RAD_SHIFT,		ID_FILTER_STRUCTURAL, "menu_filter_structural"},
+  {"FilterLightgrid",		0, 0,							ID_FILTER_LIGHTGRID, "menu_filter_lightgrid"},	// Lightgrid
+  {"FilterPatches",			'P', RAD_CONTROL,				ID_FILTER_PATCHES, "menu_filter_patches"},
+  {"FilterDetails",			'D', RAD_CONTROL,				ID_FILTER_DETAILS, "menu_filter_details"},
+  {"FilterHintsSkips",		'H', RAD_CONTROL,				ID_FILTER_HINTSSKIPS, "menu_filter_hintsskips"},
+  {"FilterModels",			'M', RAD_SHIFT,					ID_FILTER_MODELS, "menu_filter_models"},
+  {"FilterTriggers",		'T', RAD_CONTROL|RAD_SHIFT,		ID_FILTER_TRIGGERS, "menu_filter_triggers"},
+  {"FilterBotClips",		'M', RAD_ALT,					ID_FILTER_BOTCLIPS, "menu_filter_botclips"},
 
   // -- Hide/Show --
-  {"HideSelected",				'H', 0,									ID_VIEW_HIDESHOW_HIDESELECTED, "menu_view_hideshow_hideselected"},
-  {"ShowHidden",				'H', RAD_SHIFT,							ID_VIEW_HIDESHOW_SHOWHIDDEN, "menu_view_hideshow_showhidden"},
+  {"HideSelected",			'H', 0,							ID_VIEW_HIDESHOW_HIDESELECTED, "menu_view_hideshow_hideselected"},
+  {"ShowHidden",			'H', RAD_SHIFT,					ID_VIEW_HIDESHOW_SHOWHIDDEN, "menu_view_hideshow_showhidden"},
 
   // -- Entities as --
-  // Bounding box
-  // Wireframe
-  // Selected Wireframe
-  // Selected Skinned
-  // Skinned
-  // Skinned and Boxed
+  {"EntitiesAsBoundingBox",			0, 0,					ID_VIEW_ENTITIESAS_BOUNDINGBOX, "menu_view_entitiesas_boundingbox"},			// Bounding Box
+  {"EntitiesAsWireframe",			0, 0,					ID_VIEW_ENTITIESAS_WIREFRAME, "menu_view_entitiesas_wireframe"},				// Wireframe
+  {"EntitiesAsSelectedWireframe",	0, 0,					ID_VIEW_ENTITIESAS_SELECTEDWIREFRAME, "menu_view_entitiesas_selectedwireframe"},// Selected Wireframe
+  {"EntitiesAsSelectedSkinned",		0, 0,					ID_VIEW_ENTITIESAS_SELECTEDSKINNED, "menu_view_entitiesas_selectedskinned"},	// Selected Skinned
+  {"EntitiesAsSkinned",				0, 0,					ID_VIEW_ENTITIESAS_SKINNED, "menu_view_entitiesas_skinned"},					// Skinned
+  {"EntitiesAsSkinnedAndBoxed",		0, 0,					ID_VIEW_ENTITIESAS_SKINNEDANDBOXED, "menu_view_entitiesas_skinnedandboxed"},	// Skinned and Boxed
 
-  {"ToggleCubicClip",			'\\', RAD_CONTROL,						ID_VIEW_CUBICCLIPPING, "menu_view_cubicclipping"},
-  // OpenGL Lighting
+  {"ToggleCubicClip",		'\\', RAD_CONTROL,				ID_VIEW_CUBICCLIPPING, "menu_view_cubicclipping"},
+  {"OpenGLLighting",		0, 0,							ID_VIEW_OPENGLLIGHTING, "menu_view_opengllighting"},							// OpenGL Lighting
 
-// === Selection ===
+
+// === Selection menu ===
   // -- Drag --
-  {"DragEdges",					'E', 0,									ID_SELECTION_DRAGEDGES, "menu_selection_dragedges"},
-  {"DragVertices",				'V', 0,									ID_SELECTION_DRAGVERTECIES, "menu_selection_dragvertecies"},
+  {"DragEdges",			'E', 0,						ID_SELECTION_DRAGEDGES, "menu_selection_dragedges"},
+  {"DragVertices",		'V', 0,						ID_SELECTION_DRAGVERTECIES, "menu_selection_dragvertecies"},
 
-  {"CloneSelection",			GDK_space, 0,							ID_SELECTION_CLONE, "menu_selection_clone"},
-  {"UnSelectSelection",			GDK_Escape, 0,							ID_SELECTION_DESELECT, "menu_selection_deselect"},
-  {"InvertSelection",			'I', 0,									ID_SELECTION_INVERT, "menu_selection_invert"},
-  {"DeleteSelection",			GDK_BackSpace, 0,						ID_SELECTION_DELETE, "menu_selection_delete"},
+  {"CloneSelection",	GDK_space, 0,				ID_SELECTION_CLONE, "menu_selection_clone"},
+  {"UnSelectSelection",	GDK_Escape, 0,				ID_SELECTION_DESELECT, "menu_selection_deselect"},
+  {"InvertSelection",	'I', 0,						ID_SELECTION_INVERT, "menu_selection_invert"},
+  {"DeleteSelection",	GDK_BackSpace, 0,			ID_SELECTION_DELETE, "menu_selection_delete"},
 
   // -- Flip --
-  // Flip X
-  // Flip Y
-  // Flip Z
+  {"FlipX",				0, 0,						ID_BRUSH_FLIPX, "menu_brush_flipx"},		// Flip X
+  {"FlipY",				0, 0,						ID_BRUSH_FLIPY, "menu_brush_flipy"},		// Flip Y
+  {"FlipZ",				0, 0,						ID_BRUSH_FLIPZ, "menu_brush_flipz"},		// Flip Z
 
   // -- Rotate --
-  // Rotate X
-  // Rotate Y
-  // Rotate Z
-  // Arbitrary rotation
+  {"RotateX",			0, 0,						ID_BRUSH_ROTATEX, "menu_brush_rotatex"},	// Rotate X (later use also for models?)
+  {"RotateY",			0, 0,						ID_BRUSH_ROTATEY, "menu_brush_rotatey"},	// Rotate Y
+  {"RotateZ",			0, 0,						ID_BRUSH_ROTATEZ, "menu_brush_rotatez"},	// Rotate Z
+  {"ArbitraryRotation",	0, 0,						ID_SELECTION_ARBITRARYROTATION, "menu_selection_arbitraryrotation"},	// Arbitrary Rotation...
 
-  // Scale...
+  {"Scale",				0, 0,						ID_SELECT_SCALE, "menu_select_scale"},									// Scale...
 
   // -- CGS --
-  // Make Hollow
-  {"CSGSubtract",				'U', RAD_SHIFT,							ID_SELECTION_CSGSUBTRACT, "menu_selection_csgsubstract"},
-  {"CSGMerge",					'U', RAD_CONTROL,						ID_SELECTION_CSGMERGE, "menu_selection_csgmerge"},
+  {"MakeHollow",		0, 0,						ID_SELECTION_MAKEHOLLOW, "menu_selection_makehollow"},					// Make Hollow
+  {"CSGSubtract",		'U', RAD_SHIFT,				ID_SELECTION_CSGSUBTRACT, "menu_selection_csgsubstract"},
+  {"CSGMerge",			'U', RAD_CONTROL,			ID_SELECTION_CSGMERGE, "menu_selection_csgmerge"},
 
   // -- Select --
-  // Select Complete Tall
-  // Select Touching
-  // Select Partial Tall
-  // Select Inside
-  //  {"ViewGroups",			'G', 0,									ID_VIEW_GROUPS, "menu_view_groups"}, (temporary disabled)
-  {"SelectFuncGroup",			'G', 0,									ID_SELECT_FUNC_GROUP, "menu_select_func_group"},
-  {"SelectNudgeLeft",			GDK_Left, RAD_ALT,						ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},
-  {"SelectNudgeRight",			GDK_Right, RAD_ALT,						ID_SELECTION_SELECT_NUDGERIGHT, "menu_selection_select_nudgeright"},
-  {"SelectNudgeUp",				GDK_Up, RAD_ALT,						ID_SELECTION_SELECT_NUDGEUP, "menu_selection_select_nudgeup"},
-  {"SelectNudgeDown",			GDK_Down, RAD_ALT,						ID_SELECTION_SELECT_NUDGEDOWN, "menu_selection_select_nudgedown"},
+  {"SelectCompleteTall",0, 0,						ID_SELECTION_SELECTCOMPLETETALL, "menu_selection_selectcompletetall"},	// Select Complete Tall
+  {"SelectTouching",	0, 0,						ID_SELECTION_SELECTTOUCHING, "menu_selection_selecttouching"},			// Select Touching
+  {"SelectPartialTall",	0, 0,						ID_SELECTION_SELECTPARTIALTALL, "menu_selection_selectpartialtall"},	// Select Partial Tall
+  {"SelectInside",		0, 0,						ID_SELECTION_SELECTINSIDE, "menu_selection_selectinside"},				// Select Inside
+  //  {"ViewGroups",	'G', 0,						ID_VIEW_GROUPS, "menu_view_groups"}, 									// (temporary disabled)
+  {"SelectFuncGroup",	'G', 0,						ID_SELECT_FUNC_GROUP, "menu_select_func_group"},
+  {"SelectNudgeLeft",	GDK_Left, RAD_ALT,			ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},		// ***AEon: These cursor shortcuts are not shown in the menu?
+  {"SelectNudgeRight",	GDK_Right, RAD_ALT,			ID_SELECTION_SELECT_NUDGERIGHT, "menu_selection_select_nudgeright"},
+  {"SelectNudgeUp",		GDK_Up, RAD_ALT,			ID_SELECTION_SELECT_NUDGEUP, "menu_selection_select_nudgeup"},
+  {"SelectNudgeDown",	GDK_Down, RAD_ALT,			ID_SELECTION_SELECT_NUDGEDOWN, "menu_selection_select_nudgedown"},
 
   // -- Clipper --
-  {"ToggleClipper",				'X', 0,									ID_VIEW_CLIPPER, "menu_view_clipper"},
-  {"ClipSelected",				GDK_Return, 0,							ID_CLIP_SELECTED, "menu_clip_selected"},
-  {"SplitSelected",				GDK_Return, RAD_SHIFT,					ID_SPLIT_SELECTED, "menu_split_selected"},
-  {"FlipClip",					GDK_Return, RAD_CONTROL,				ID_FLIP_CLIP, "menu_flip_clip"},
+  {"ToggleClipper",		'X', 0,						ID_VIEW_CLIPPER, "menu_view_clipper"},
+  {"ClipSelected",		GDK_Return, 0,				ID_CLIP_SELECTED, "menu_clip_selected"},
+  {"SplitSelected",		GDK_Return, RAD_SHIFT,		ID_SPLIT_SELECTED, "menu_split_selected"},
+  {"FlipClip",			GDK_Return, RAD_CONTROL,	ID_FLIP_CLIP, "menu_flip_clip"},
 
-  {"ConnectSelection",			'K', RAD_CONTROL,						ID_SELECTION_CONNECT, "menu_selection_connect"},
-  // Ungroup entity		***Bind (bind func_group?)
-  {"MakeDetail",				'M', RAD_CONTROL,						ID_SELECTION_MAKE_DETAIL, "menu_selection_make_detail"},
-  {"MakeStructural",			'S', RAD_CONTROL|RAD_SHIFT,				ID_SELECTION_MAKE_STRUCTURAL, "menu_selection_make_structural"},
+  {"ConnectSelection",	'K', RAD_CONTROL,			ID_SELECTION_CONNECT, "menu_selection_connect"},
+  {"UngroupEntity",		0, 0,						ID_SELECTION_UNGROUPENTITY, "menu_selection_ungroupentity"},			// Ungroup Entity
+  {"MakeDetail",		'M', RAD_CONTROL,			ID_SELECTION_MAKE_DETAIL, "menu_selection_make_detail"},
+  {"MakeStructural",	'S', RAD_CONTROL|RAD_SHIFT,	ID_SELECTION_MAKE_STRUCTURAL, "menu_selection_make_structural"},
 
-// === Grid ===			***twice bound
-  // Grid 0.25u
-  // Grid 0.5u
-  {"SetGrid1",					'1', 0,									ID_GRID_1, "menu_grid_1"},
-  {"SetGrid1",					GDK_KP_1, 0,							ID_GRID_1, "menu_grid_1"},
-  {"SetGrid2",					'2', 0,									ID_GRID_2, "menu_grid_2"},
-  {"SetGrid2",					GDK_KP_2, 0,							ID_GRID_2, "menu_grid_2"},
-  {"SetGrid4",					'3', 0,									ID_GRID_4, "menu_grid_4"},
-  {"SetGrid4",					GDK_KP_3, 0,							ID_GRID_4, "menu_grid_4"},
-  {"SetGrid8",					'4', 0,									ID_GRID_8, "menu_grid_8"},
-  {"SetGrid8",					GDK_KP_4, 0,							ID_GRID_8, "menu_grid_8"},
-  {"SetGrid16",					'5', 0,									ID_GRID_16, "menu_grid_16"},
-  {"SetGrid16",					GDK_KP_5, 0,							ID_GRID_16, "menu_grid_16"},
-  {"SetGrid32",					'6', 0,									ID_GRID_32, "menu_grid_32"},
-  {"SetGrid32",					GDK_KP_6, 0,							ID_GRID_32, "menu_grid_32"},
-  {"SetGrid64",					'7', 0,									ID_GRID_64, "menu_grid_64"},
-  {"SetGrid64",					GDK_KP_7, 0,							ID_GRID_64, "menu_grid_64"},
-  {"SetGrid128",				'8', 0,									ID_GRID_128, "menu_grid_128"},
-  {"SetGrid128",				GDK_KP_8, 0,							ID_GRID_128, "menu_grid_128"},
-  {"SetGrid256",				'9', 0,									ID_GRID_256, "menu_grid_256"},
-  {"SetGrid256",				GDK_KP_9, 0,							ID_GRID_256, "menu_grid_256"},
-  // Snap to grid		***Ctrl+G is also Snap to Grid!
 
-// === Textures ===
-  {"ShowInUse",					'U', 0,									ID_TEXTURES_SHOWINUSE, "menu_textures_showinuse"},
-  {"ShowAllTextures",			'A', RAD_CONTROL,						ID_TEXTURES_SHOWALL, "menu_textures_showall"},
-  // Show shaders
-  // Flush & Reload Shaders
-  // Load directory...
-  // Directory list...
-  {"SurfaceInspector",			'S', 0,									ID_TEXTURES_INSPECTOR, "menu_textures_inspector"},
+// === Grid menu ===
+  {"SetGrid025",		0, 0,			ID_GRID_025, "menu_grid_025"},	// Grid 0.25u
+  {"SetGrid05",			0, 0,			ID_GRID_05, "menu_grid_05"},	// Grid 0.5u
+  {"SetGrid1",			'1', 0,			ID_GRID_1, "menu_grid_1"},		// ***Twice bound
+  {"SetGrid1",			GDK_KP_1, 0,	ID_GRID_1, "menu_grid_1"},
+  {"SetGrid2",			'2', 0,			ID_GRID_2, "menu_grid_2"},
+  {"SetGrid2",			GDK_KP_2, 0,	ID_GRID_2, "menu_grid_2"},
+  {"SetGrid4",			'3', 0,			ID_GRID_4, "menu_grid_4"},
+  {"SetGrid4",			GDK_KP_3, 0,	ID_GRID_4, "menu_grid_4"},
+  {"SetGrid8",			'4', 0,			ID_GRID_8, "menu_grid_8"},
+  {"SetGrid8",			GDK_KP_4, 0,	ID_GRID_8, "menu_grid_8"},
+  {"SetGrid16",			'5', 0,			ID_GRID_16, "menu_grid_16"},
+  {"SetGrid16",			GDK_KP_5, 0,	ID_GRID_16, "menu_grid_16"},
+  {"SetGrid32",			'6', 0,			ID_GRID_32, "menu_grid_32"},
+  {"SetGrid32",			GDK_KP_6, 0,	ID_GRID_32, "menu_grid_32"},
+  {"SetGrid64",			'7', 0,			ID_GRID_64, "menu_grid_64"},
+  {"SetGrid64",			GDK_KP_7, 0,	ID_GRID_64, "menu_grid_64"},
+  {"SetGrid128",		'8', 0,			ID_GRID_128, "menu_grid_128"},
+  {"SetGrid128",		GDK_KP_8, 0,	ID_GRID_128, "menu_grid_128"},
+  {"SetGrid256",		'9', 0,			ID_GRID_256, "menu_grid_256"},
+  {"SetGrid256",		GDK_KP_9, 0,	ID_GRID_256, "menu_grid_256"},
+  {"ToggleSnapToGrid",	0, 0,			ID_SNAPTOGRID, "menu_snaptogrid"},	// Snap to Grid (global setting)
+
+
+// === Textures menu ===
+  {"ShowInUse",					'U', 0,				ID_TEXTURES_SHOWINUSE, "menu_textures_showinuse"},
+  {"ShowAllTextures",			'A', RAD_CONTROL,	ID_TEXTURES_SHOWALL, "menu_textures_showall"},
+  {"ShowShaders",				0, 0,				ID_TEXTURES_SHADERS_SHOW, "menu_textures_shaders_show"},	// Show Shaders
+  {"ReloadShaders",				0, 0,				ID_TEXTURES_RELOADSHADERS, "menu_textures_reloadshaders"},	// Flush & Reload Shaders
+  {"TexturesLoad",				0, 0,				ID_TEXTURES_LOAD, "menu_textures_load"},					// Load Directory...
+  {"TexturesLoadList",			0, 0,				ID_TEXTURES_LOADLIST, "menu_textures_loadlist"},			// Directory List...
+  {"SurfaceInspector",			'S', 0,				ID_TEXTURES_INSPECTOR, "menu_textures_inspector"},
 
   // -- Render Quality --
-  // Wireframe
-  // Flat shade
-  // Nearest
-  // Nearest Mipmap
-  // Linear
-  // Bilinear
-  // Bilinear Mipmap
-  // Trilinear
+  {"RenderQWireframe",			0, 0,				ID_TEXTURES_WIREFRAME, "menu_textures_wireframe"},		// Wireframe
+  {"RenderQFlatShade",			0, 0,				ID_TEXTURES_FLATSHADE, "menu_textures_flatshade"},		// Flat Shade
+  {"RenderQNearest",			0, 0,				ID_VIEW_NEAREST, "menu_view_nearest"},					// Nearest
+  {"RenderQNearestMipmap",		0, 0,				ID_VIEW_NEARESTMIPMAP, "menu_view_nearestmipmap"},		// Nearest Mipmap
+  {"RenderQLinear",				0, 0,				ID_VIEW_LINEAR, "menu_view_linear"},					// Linear
+  {"RenderQBilinear",			0, 0,				ID_VIEW_BILINEAR, "menu_view_bilinear"},				// Bilinear
+  {"RenderQBilinearMipmap",		0, 0,				ID_VIEW_BILINEARMIPMAP, "menu_view_bilinearmipmap"},	// Bilinear Mipmap
+  {"RenderQTrilinear",			0, 0,				ID_VIEW_TRILINEAR, "menu_view_trilinear"},				// Trilinear
 
-  // Find / Replace...  *** Ctrl+F
+  {"TextureReplaceAll",			'F', RAD_CONTROL,	ID_TEXTURE_REPLACEALL, "menu_texture_replaceall"},		// Find / Replace...
 
   // -- Texture Lock --
-  {"TogTexLock",				'T', RAD_SHIFT,							ID_TOGGLE_LOCK, "menu_toggle_lock"},
-  {"TogTexRotLock",				'R', RAD_SHIFT,							ID_TOGGLE_ROTATELOCK, "menu_toggle_rotatelock"},
+  {"TogTexLock",				'T', RAD_SHIFT,		ID_TOGGLE_LOCK, "menu_toggle_lock"},
+  {"TogTexRotLock",				'R', RAD_SHIFT,		ID_TOGGLE_ROTATELOCK, "menu_toggle_rotatelock"},
 
   // -- Texture Window Scale --
-  // 200%
-  // 100%
-  // 50%
-  // 25%
-  // 10%
-  // Fixed size
+  {"TextureWindowScale200",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_200, "menu_textures_texturewindowscale_200"},	// 200%
+  {"TextureWindowScale100",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_100, "menu_textures_texturewindowscale_100"},	// 100%
+  {"TextureWindowScale50",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_50, "menu_textures_texturewindowscale_50"},		// 50%
+  {"TextureWindowScale25",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_25, "menu_textures_texturewindowscale_25"},		// 25%
+  {"TextureWindowScale10",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_10, "menu_textures_texturewindowscale_10"},		// 10%
+  {"TextureWindowScaleFixed",	0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_FIXED, "menu_textures_texturewindowscale_fixed"},// Fixed Size
 
-  // shaderlist.txt only
+  {"TexturesShaderlistOnly",	0, 0,				ID_TEXTURES_SHADERLISTONLY, "menu_textures_shaderlistonly"},	// shaderlist.txt only
 
-// === Textures ===
-  // Benchmark
+
+// === Misc menu ===
+  {"Benchmark",				0, 0,						ID_MISC_BENCHMARK, "menu_misc_benchmark"},			// Benchmark
 
   // -- Colors --
   // - Themes -
-  // 	QE4 Original
-  // 	Q3Radiant Original
-  // 	Black and Green
-  // 	Maya/Max/Lightwave Emulation
-  // Texture Background...
+  {"ThemeOriginalQE4",		0, 0,						ID_COLOR_SETORIGINAL, "menu_color_setoriginal"},	// 	QE4 Original
+  {"ThemeQ3Radiant",		0, 0,						ID_COLOR_SETQER, "menu_color_setqer"},				// 	Q3Radiant Original
+  {"ThemeBlackAndGreen",	0, 0,						ID_COLOR_SETBLACK, "menu_color_setblack"},			// 	Black and Green
+  {"ThemeMayaMaxLightwave",	0, 0,						ID_COLOR_SETYDNAR, "menu_color_setydnar"},			// 	Maya/Max/Lightwave Emulation
+  // Texture Background...			// ***AEon: These are too irrelevant to map to keys, IMO.
   // Grid Background...
   // Grid Major...
   // Grid Minor...
@@ -359,86 +366,91 @@ SCommandInfo g_Commands[] =
   // Clipper...
   // Active View name...
 
-  // Gamma...
-  // Find brush...		***Ctrl+Shift+F
-  {"NextLeakSpot",				'K', RAD_CONTROL|RAD_SHIFT,				ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},  // ***Should swap K,L!
-  {"PrevLeakSpot",				'L', RAD_CONTROL|RAD_SHIFT,				ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
-  // Print XY View
-  {"EntityColor",				'K', 0,									ID_MISC_SELECTENTITYCOLOR, "menu_misc_select_entitycolor"},
+  {"SetGamma",				0, 0,						ID_MISC_GAMMA, "menu_misc_gamma"},						// Gamma...
+  {"FindBrush",				'F', RAD_CONTROL|RAD_SHIFT,	ID_MISC_FINDBRUSH, "menu_misc_findbrush"},				// Find Brush...
+  {"NextLeakSpot",			'K', RAD_CONTROL|RAD_SHIFT,	ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},		// ***AEon: Should swap K,L!
+  {"PrevLeakSpot",			'L', RAD_CONTROL|RAD_SHIFT,	ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
+  {"PrintXYView",			0, 0,						ID_MISC_PRINTXY, "menu_misc_printxy"},					// Print XY View (Screen Grab)
+  {"EntityColor",			'K', 0,						ID_MISC_SELECTENTITYCOLOR, "menu_misc_select_entitycolor"},
 
-// === Region ===
-  // Off
-  // Set XY
-  // Set Tall Brush
-  // Set Brush
-  {"RegionSetSelection",		'R', RAD_CONTROL|RAD_SHIFT,				ID_REGION_SETSELECTION, "menu_region_setselection"},
 
-// === Brush ===
-  {"Brush3Sided",				'3', RAD_CONTROL,						ID_BRUSH_3SIDED, "menu_brush_3sided"},
-  {"Brush4Sided",				'4', RAD_CONTROL,						ID_BRUSH_4SIDED, "menu_brush_4sided"},
-  {"Brush5Sided",				'5', RAD_CONTROL,						ID_BRUSH_5SIDED, "menu_brush_5sided"},
-  {"Brush6Sided",				'6', RAD_CONTROL,						ID_BRUSH_6SIDED, "menu_brush_6sided"},
-  {"Brush7Sided",				'7', RAD_CONTROL,						ID_BRUSH_7SIDED, "menu_brush_7sided"},
-  {"Brush8Sided",				'8', RAD_CONTROL,						ID_BRUSH_8SIDED, "menu_brush_8sided"},
-  {"Brush9Sided",				'9', RAD_CONTROL,						ID_BRUSH_9SIDED, "menu_brush_9sided"},
-  // Arbitrary sided...	***Ctrl+1
+// === Region menu ===
+  {"RegionOff",				0, 0,						ID_REGION_OFF, "menu_region_off"},						// Off
+  {"RegionSetXY",			0, 0,						ID_REGION_SETXY, "menu_region_setxy"},					// Set XY
+  {"RegionSetTallBrush",	0, 0,						ID_REGION_SETTALLBRUSH, "menu_region_settallbrush"},	// Set Tall Brush
+  {"RegionSetBrush",		0, 0,						ID_REGION_SETBRUSH, "menu_region_setbrush"},			// Set Brush
+  {"RegionSetSelection",	'R', RAD_CONTROL|RAD_SHIFT,	ID_REGION_SETSELECTION, "menu_region_setselection"},
+
+
+// === Brush menu ===
+  {"Brush3Sided",			'3', RAD_CONTROL,	ID_BRUSH_3SIDED, "menu_brush_3sided"},
+  {"Brush4Sided",			'4', RAD_CONTROL,	ID_BRUSH_4SIDED, "menu_brush_4sided"},
+  {"Brush5Sided",			'5', RAD_CONTROL,	ID_BRUSH_5SIDED, "menu_brush_5sided"},
+  {"Brush6Sided",			'6', RAD_CONTROL,	ID_BRUSH_6SIDED, "menu_brush_6sided"},
+  {"Brush7Sided",			'7', RAD_CONTROL,	ID_BRUSH_7SIDED, "menu_brush_7sided"},
+  {"Brush8Sided",			'8', RAD_CONTROL,	ID_BRUSH_8SIDED, "menu_brush_8sided"},
+  {"Brush9Sided",			'9', RAD_CONTROL,	ID_BRUSH_9SIDED, "menu_brush_9sided"},
+  {"BrushArbitrarySided",	'1', RAD_CONTROL,	ID_BRUSH_ARBITRARYSIDED, "menu_region_off"},					// Arbitrary Sided...
 
   // -- Primitives --
-  // Cone...
-  // Sphere...
+  {"BrushMakeCone",			0, 0,				ID_BRUSH_MAKECONE, "menu_brush_makecone"},						// Cone...
+  {"BrushPrimitivesSphere",	0, 0,				ID_BRUSH_PRIMITIVES_SPHERE, "menu_brush_primitives_sphere"},	// Sphere...
 
-// === Curve === (12 or 16 sided?)
-  // Cylinder
+
+// === Curve menu ===
+  {"PatchTube",					0, 0,						ID_CURVE_PATCHTUBE, "menu_curve_patchtube"},					// Cylinder
 
   // -- More Cylinders --
-  // Dense Cylinder
-  // Very Dense Cylinder
-  // Square Cylinder
+  {"PatchDenseTube",			0, 0,						ID_CURVE_PATCHDENSETUBE, "menu_curve_patchdensetube"},			// Dense Cylinder
+  {"PatchVeryDensetube",		0, 0,						ID_CURVE_PATCHVERYDENSETUBE, "menu_curve_patchverydensetube"},	// Very Dense Cylinder
+  {"PatchSquareTube",			0, 0,						ID_CURVE_PATCHSQUARE, "menu_curve_patchsquare"},				// Square Cylinder
 
-  // End cap
-  // Bevel
+  {"PatchEndCap",				0, 0,						ID_CURVE_PATCHENDCAP, "menu_curve_patchendcap"},				// End Cap
+  {"PatchBevel",				0, 0,						ID_CURVE_PATCHBEVEL, "menu_curve_patchbevel"},					// Bevel
 
-  // -- More End Caps, Bevels --
-  // Square End Cap
-  // Square Bevel
+  // -- More End Caps, Bevels -- 							// *** ID and Name swap in menu calls (fix!?), i.e. EndCap uses Bevel ID!
+  {"PatchSquareEndCap",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL, "menu_curve_moreendcapsbevels_squarebevel"},	// Square End Cap
+  {"PatchSquareBevel",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP, "menu_curve_moreendcapsbevels_squareendcap"},	// Square Bevel
 
-  // Cone
-  //*Sphere				*** Ghosted probably never worked - remove?
-  {"SimplePatchMesh",			'P', RAD_SHIFT,							ID_CURVE_SIMPLEPATCHMESH, "menu_simplepatchmesh"},
+  {"PatchCone",					0, 0,						ID_CURVE_PATCHCONE, "menu_curve_patchcone"},					// Cone
+  //*Sphere													// *** Ghosted probably never worked - remove in menu?
+  {"SimplePatchMesh",			'P', RAD_SHIFT,				ID_CURVE_SIMPLEPATCHMESH, "menu_simplepatchmesh"},
 
   // -- Insert --
-  // Insert (2) Columns
-  // Add (2) Columns
-  // Insert (2) Rows
-  // Add (2) Rows
+  {"PatchInsert2Columns",		0, 0,						ID_CURVE_INSERT_INSERTCOLUMN, "menu_curve_insert_insertcolumn"},// Insert (2) Columns
+  {"PatchAdd2Columns",			0, 0,						ID_CURVE_INSERT_ADDCOLUMN, "menu_curve_insert_addcolumn"},		// Add (2) Columns
+  {"PatchInsert2Rows",			0, 0,						ID_CURVE_INSERT_INSERTROW, "menu_curve_insert_insertrow"},		// Insert (2) Rows
+  {"PatchAdd2Rows",				0, 0,						ID_CURVE_INSERT_ADDROW, "menu_curve_insert_addrow"},			// Add (2) Rows
 
   // -- Delete --
-  // First (2) Columns
-  // Last (2) Columns
-  // First (2) Rows
-  // Last (2) Rows
+  {"PatchDeleteFirst2Columns",	0, 0,						ID_CURVE_DELETE_FIRSTCOLUMN, "menu_curve_delete_firstcolumn"},	// First (2) Columns
+  {"PatchDeleteLast2Columns",	0, 0,						ID_CURVE_DELETE_LASTCOLUMN, "menu_curve_delete_lastcolumn"},	// Last (2) Columns
+  {"PatchDeleteFirst2Rows",		0, 0,						ID_CURVE_DELETE_FIRSTROW, "menu_curve_delete_firstrow"},		// First (2) Rows
+  {"PatchDeleteLast2Rows",		0, 0,						ID_CURVE_DELETE_LASTROW, "menu_curve_delete_lastrow"},			// Last (2) Rows
 
   // -- Matrix --
-  {"InvertCurve",				'I', RAD_CONTROL,						ID_CURVE_NEGATIVE, "menu_curve_negative"},
+  {"InvertCurve",				'I', RAD_CONTROL,			ID_CURVE_NEGATIVE, "menu_curve_negative"},
   // - Re-disperse -
-  {"RedisperseRows",			'E', RAD_CONTROL,						ID_CURVE_REDISPERSE_ROWS, "menu_curve_redisperse_rows"},
-  {"RedisperseIntermediateCols",'E', RAD_CONTROL|RAD_SHIFT,				ID_CURVE_REDISPERSE_INTERMEDIATE_COLS, "menu_curve_redisperse_cols"},
-  //	Rows (Intermediate)
-  {"MatrixTranspose",			'M', RAD_CONTROL|RAD_SHIFT,				ID_CURVE_MATRIX_TRANSPOSE, "menu_curve_matrix_transpose"},
+  {"RedisperseRows",			'E', RAD_CONTROL,			ID_CURVE_REDISPERSE_ROWS, "menu_curve_redisperse_rows"},
+  {"RedisperseIntermediateCols",'E', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_REDISPERSE_INTERMEDIATE_COLS, "menu_curve_redisperse_cols"},
+  {"RedisperseIntermediateRows",0, 0,						ID_CURVE_REDISPERSE_INTERMEDIATE_ROWS, "menu_curve_redisperse_rows"},	//	Rows (Intermediate)
+  {"MatrixTranspose",			'M', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_MATRIX_TRANSPOSE, "menu_curve_matrix_transpose"},
 
-  {"CapCurrentCurve",			'C', RAD_SHIFT,							ID_CURVE_CAP, "menu_curve_cap"},
-  {"CycleCapTexturePatch",		'N', RAD_CONTROL|RAD_SHIFT,				ID_CURVE_CYCLECAP, "menu_curve_cyclecap"},
+  {"CapCurrentCurve",			'C', RAD_SHIFT,				ID_CURVE_CAP, "menu_curve_cap"},
+  {"CycleCapTexturePatch",		'N', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_CYCLECAP, "menu_curve_cyclecap"},
 
   // -- Overlay --
-  {"MakeOverlayPatch",			'Y', 0,									ID_CURVE_OVERLAY_SET, "menu_curve_overlay_set"},
-  {"ClearPatchOverlays",		'L', RAD_CONTROL,						ID_CURVE_OVERLAY_CLEAR, "menu_curve_overlay_clear"},
+  {"MakeOverlayPatch",			'Y', 0,						ID_CURVE_OVERLAY_SET, "menu_curve_overlay_set"},
+  {"ClearPatchOverlays",		'L', RAD_CONTROL,			ID_CURVE_OVERLAY_CLEAR, "menu_curve_overlay_clear"},
 
-  {"ThickenPatch",				'T', RAD_CONTROL,						ID_CURVE_THICKEN, "menu_curve_thicken"},
+  {"ThickenPatch",				'T', RAD_CONTROL,			ID_CURVE_THICKEN, "menu_curve_thicken"},
 
-// === Plugins === 		***Skipped for now
 
-// === Help ===
-  // Manual		F1		***Not directly bound?
+// === Plugins menu === 		// ***Skipped for now.
+
+
+// === Help menu ===			// ***Skipping most entries for now.
+  // Manual		F1				// ***Shortcut F1 "hacked" into menu code.
 
   // -- General --
   // ...
@@ -447,11 +459,12 @@ SCommandInfo g_Commands[] =
   // TA Teams Manual
   // Team Arena Mapping
 
-  // Bug report
-  // Shortcuts list		***..., bind F2
-  // About
+  {"HelpBugReport",			0, 0,		ID_HELP_BUGREPORT, "menu_help_bugreport"},		// Bug Report ***Link Broken
+  {"HelpCommandList",		GDK_F2, 0,	ID_HELP_COMMANDLIST, "menu_help_commandlist"},	// Shortcuts List
+  {"HelpAbout",				0, 0,		ID_HELP_ABOUT, "menu_help_about"},				// About
 
-// === HIDDEN ===
+
+// === HIDDEN menu ===			// ***AEon: TODO... migrate these into menus, to let folks look them up.
   {"DecPatchColumn",			GDK_KP_Subtract, RAD_CONTROL|RAD_SHIFT,	ID_CURVE_DELETECOLUMN, "menu_curve_deletecolumn"},
   {"DecPatchRow",				GDK_KP_Subtract, RAD_CONTROL,			ID_CURVE_DELETEROW, "menu_curve_deleterow"},
   {"IncPatchColumn",			GDK_KP_Add, RAD_CONTROL|RAD_SHIFT,		ID_CURVE_INSERTCOLUMN, "menu_curve_insertcolumn"},
@@ -461,8 +474,9 @@ SCommandInfo g_Commands[] =
 
   {"MoveSelectionUP",			GDK_KP_Add, 0,							ID_SELECTION_MOVEUP, "menu_selection_moveup"},
   {"MoveSelectionDOWN",			GDK_KP_Subtract, 0,						ID_SELECTION_MOVEDOWN, "menu_selection_movedown"},
-  {"CycleOutlineStyle",			'J', 0,									ID_SELECTION_OUTLINESTYLE, "menu_selection_outlinestyle"},
-  {"DumpSelectedBrush",			'D', RAD_SHIFT,							ID_SELECTION_PRINT, "menu_selection_print"},
+  {"CycleOutlineStyle",			'J', 0,									ID_SELECTION_OUTLINESTYLE, "menu_selection_outlinestyle"},	// in Camera View
+  {"ToggleSizePaint",			'Q', 0,									ID_SELECTION_TOGGLESIZEPAINT, "menu_selection_togglesizepaint"},
+  {"DumpSelectedBrush",			'D', RAD_SHIFT,							ID_SELECTION_PRINT, "menu_selection_print"},				// ***AEon: Function?
 
   {"TexRotateClock",			GDK_Next, RAD_SHIFT,					ID_SELECTION_TEXTURE_ROTATECLOCK, "menu_selection_texture_rotateclock"},
   {"TexRotateClock1deg",		GDK_Next, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG, "menu_selection_texture_rotateclock_1deg"},
@@ -483,15 +497,11 @@ SCommandInfo g_Commands[] =
   {"TexShiftRight",				GDK_Right, RAD_SHIFT,					ID_SELECTION_TEXTURE_SHIFTRIGHT, "menu_selection_texture_shiftright"},
   {"TexShiftRight1gu",			GDK_Right, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU, "menu_selection_texture_shiftright_1gu"},
 
-  {"ToggleSizePaint",			'Q', 0,									ID_SELECTION_TOGGLESIZEPAINT, "menu_selection_togglesizepaint"},
-
-  {"TextureWindowScaledown",	GDK_Insert, RAD_ALT,					ID_TEXTUREWINDOW_SCALEDOWN, "menu_texturewindow_scaledown"},
+  {"TextureWindowScaledown",	GDK_Insert, RAD_ALT,					ID_TEXTUREWINDOW_SCALEDOWN, "menu_texturewindow_scaledown"}, // Does not work *in* Textures window, use outside.
   {"TextureWindowScaleup",		GDK_Delete, RAD_ALT,					ID_TEXTUREWINDOW_SCALEUP, "menu_texturewindow_scaleup"},
 
   {"ToggleRealtime",			'R', RAD_CONTROL,						ID_VIEW_CAMERAUPDATE, "menu_view_cameraupdate"},
-  {"CenterXYView",				GDK_Tab, RAD_CONTROL|RAD_SHIFT,			ID_VIEW_CENTERVIEW, "menu_view_centerview"},
   {"ToggleCrosshairs",			'X', RAD_SHIFT,							ID_VIEW_CROSSHAIR, "menu_view_crosshair"},
-  {"NextView",					GDK_Tab, RAD_CONTROL,					ID_VIEW_NEXTVIEW, "menu_view_nextview"},
   {"ViewTextures",				'T', 0,									ID_VIEW_TEXTURE, "menu_view_texture"},
 
   {"CameraAngleUp",				'A', 0,									ID_CAMERA_ANGLEUP, "menu_camera_angleup"},
@@ -506,7 +516,7 @@ SCommandInfo g_Commands[] =
   {"CameraStrafeLeft",			GDK_comma, 0,							ID_CAMERA_STRAFELEFT, "menu_camera_strafeleft"},
   {"CameraStrafeRight",			GDK_period, 0,							ID_CAMERA_STRAFERIGHT, "menu_camera_straferight"},
 
-  {"GridUp",					']', 0,									ID_GRID_NEXT, "menu_grid_next"},
+  {"GridUp",					']', 0,									ID_GRID_NEXT, "menu_grid_next"},	// [ ] not accessible on German keyboard!
   {"GridDown",					'[', 0,									ID_GRID_PREV, "menu_grid_prev"},
   {"ToggleGrid",				'0', 0,									ID_GRID_TOGGLE, "menu_grid_toggle"},
   {"ToggleGrid",				GDK_KP_0, 0,							ID_GRID_TOGGLE, "menu_grid_toggle"},
@@ -514,11 +524,11 @@ SCommandInfo g_Commands[] =
   {"BendMode",					'B', 0,									ID_PATCH_BEND, "menu_patch_bend"},
   {"PatchInspector",			'S', RAD_SHIFT,							ID_PATCH_INSPECTOR, "menu_patch_inspector"},
   {"NaturalizePatch",			'N', RAD_CONTROL,						ID_PATCH_NATURALIZE, "menu_patch_naturalize"},
-  {"Patch TAB",					GDK_Tab, 0,								ID_PATCH_TAB, "menu_patch_tab"},
+  {"Patch TAB",					GDK_Tab, 0,								ID_PATCH_TAB, "menu_patch_tab"},	// AEon: "Patch Tab" bound twice?
   {"Patch TAB",					GDK_Tab, RAD_SHIFT,						ID_PATCH_TAB, "menu_patch_tab"},
 
   {"SelectAllOfType",			'A', RAD_SHIFT,							ID_SELECT_ALL, "menu_select_all"},
-  {"MouseRotate",				'R', 0,									ID_SELECT_MOUSEROTATE, "menu_select_mouserotate"},
+  {"MouseRotate",				'R', 0,									ID_SELECT_MOUSEROTATE, "menu_select_mouserotate"},	// This is a mode, like E, V!
   {"SnapToGrid",				'G', RAD_CONTROL,						ID_SELECT_SNAPTOGRID, "menu_select_snaptogrid"},
   {"FitTexture",				'B', RAD_SHIFT,							IDC_BTN_FACEFIT, "menu_idc_btn_facefit"},	// ***Should not open Surface Inspector, IMO.
 };
@@ -1199,7 +1209,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_NEW);
   menu_separator (menu);
 
-  //++timo temporary experimental stuff for sleep mode..
+  //++timo temporary experimental stuff for sleep mode... AEon: 1/16/2010 broken on "awaken".
   item = create_menu_item_with_mnemonic (menu, _("_Sleep"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_SLEEP);
   g_object_set_data (G_OBJECT (window), "menu_file_sleep", item );
@@ -1270,7 +1280,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                            GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_REDO);
   g_object_set_data (G_OBJECT (window), "menu_edit_redo", item);
   menu_separator (menu);
-  item = create_menu_item_with_mnemonic (menu, _("_Copy"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_COPYBRUSH);
+  item = create_menu_item_with_mnemonic (menu, _("_Copy"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_COPYBRUSH);		// AEon: "item =" x3 is redundant?
   item = create_menu_item_with_mnemonic (menu, _("_Paste"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_PASTEBRUSH);
   item = create_menu_item_with_mnemonic (menu, _("P_aste to Camera"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_PASTEBRUSHTOCAMERA);
   item = create_menu_item_with_mnemonic (menu, _("_Delete"), GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_DELETE);
@@ -1279,6 +1289,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu, _("Map Info..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_MAPINFO);
   create_menu_item_with_mnemonic (menu, _("Entity Info..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_ENTITYINFO);
   menu_separator (menu);
+  // AEon: Brush Scripts is not implemented, should be ghosted or commented out!
   create_menu_item_with_mnemonic (menu, _("Brush Scripts..."), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_SCRIPTS);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Load Pre_fab..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_LOADPREFAB);
@@ -1720,6 +1731,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_NEXTLEAKSPOT);
   item = create_menu_item_with_mnemonic (menu, _("Previous Leak Spot"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PREVIOUSLEAKSPOT);
+  // ***AEon: Print XY View saved BMP of that view... image broken!
   create_menu_item_with_mnemonic (menu, _("_Print XY View"), GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PRINTXY);
   item = create_menu_item_with_mnemonic (menu, _("_Select Entity Color..."),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_SELECTENTITYCOLOR);
@@ -1864,7 +1876,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   /*
   create_menu_item_with_mnemonic (menu, "Refresh", GTK_SIGNAL_FUNC (HandleCommand), ID_PLUGINS_REFRESH);
   */
-  // NOTE: the seperator is used when doing a refresh of the list, everything past the seperator is removed
+  // NOTE: the separator is used when doing a refresh of the list, everything past the separator is removed
   item = menu_separator (menu);
   g_object_set_data (G_OBJECT (window), "menu_plugin_separator", item);
   g_object_set_data (G_OBJECT (window), "menu_plugin", menu);
@@ -1903,64 +1915,77 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
 
   gtk_widget_hide (gtk_menu_get_attach_widget (GTK_MENU (menu)));
 
-  create_menu_item_with_mnemonic (menu, "BendMode", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
-  create_menu_item_with_mnemonic (menu, "FitTexture", GTK_SIGNAL_FUNC (HandleCommand), IDC_BTN_FACEFIT);
-  create_menu_item_with_mnemonic (menu, "ViewTextures", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_TEXTURE);
-  create_menu_item_with_mnemonic (menu, "PatchInspector", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
-  create_menu_item_with_mnemonic (menu, "InvertCurveTextureX", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREY);
-  create_menu_item_with_mnemonic (menu, "InvertCurveTextureY", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREX);
-  create_menu_item_with_mnemonic (menu, "IncPatchColumn", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTCOLUMN);
-  create_menu_item_with_mnemonic (menu, "IncPatchRow", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTROW);
-  create_menu_item_with_mnemonic (menu, "DecPatchColumn", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETECOLUMN);
-  create_menu_item_with_mnemonic (menu, "DecPatchRow", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETEROW);
-  create_menu_item_with_mnemonic (menu, "Patch TAB", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
-  create_menu_item_with_mnemonic (menu, "Patch TAB", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEDOWN);
-  create_menu_item_with_mnemonic (menu, "CameraForward", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_FORWARD);
-  create_menu_item_with_mnemonic (menu, "CameraBack", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_BACK);
-  create_menu_item_with_mnemonic (menu, "CameraLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_LEFT);
-  create_menu_item_with_mnemonic (menu, "CameraRight", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_RIGHT);
-  create_menu_item_with_mnemonic (menu, "CameraUp", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_UP);
-  create_menu_item_with_mnemonic (menu, "CameraDown", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_DOWN);
-  create_menu_item_with_mnemonic (menu, "CameraAngleUp", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEUP);
-  create_menu_item_with_mnemonic (menu, "CameraAngleDown", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEDOWN);
-  create_menu_item_with_mnemonic (menu, "CameraStrafeRight", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFERIGHT);
-  create_menu_item_with_mnemonic (menu, "CameraStrafeLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFELEFT);
-  create_menu_item_with_mnemonic (menu, "ToggleGrid", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
-  create_menu_item_with_mnemonic (menu, "ToggleCrosshairs", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CROSSHAIR);
-  create_menu_item_with_mnemonic (menu, "ToggleRealtime", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CAMERAUPDATE);
-  create_menu_item_with_mnemonic (menu, "MouseRotate", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_MOUSEROTATE);
-  create_menu_item_with_mnemonic (menu, "TexRotateClock", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK);
-  create_menu_item_with_mnemonic (menu, "TexRotateCounter", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER);
-  create_menu_item_with_mnemonic (menu, "TexRotateClock1deg", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG);
-  create_menu_item_with_mnemonic (menu, "TexRotateCounter1deg", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG);
-  create_menu_item_with_mnemonic (menu, "TexScaleUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEUP);
-  create_menu_item_with_mnemonic (menu, "TexScaleDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEDOWN);
-  create_menu_item_with_mnemonic (menu, "TexShiftLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT);
-  create_menu_item_with_mnemonic (menu, "TexShiftRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT);
-  create_menu_item_with_mnemonic (menu, "TexShiftUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP);
-  create_menu_item_with_mnemonic (menu, "TexShiftDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN);
-  create_menu_item_with_mnemonic (menu, "TexShiftLeft1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftRight1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftUp1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftDown1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN_1GU);
-  create_menu_item_with_mnemonic (menu, "GridDown", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_PREV);
-  create_menu_item_with_mnemonic (menu, "GridUp", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_NEXT);
-  create_menu_item_with_mnemonic (menu, "TexScaleLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALELEFT);
-  create_menu_item_with_mnemonic (menu, "TexScaleRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALERIGHT);
-  create_menu_item_with_mnemonic (menu, "MoveSelectionDOWN", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEDOWN);
-  create_menu_item_with_mnemonic (menu, "MoveSelectionUP", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEUP);
-  create_menu_item_with_mnemonic (menu, "DumpSelectedBrush", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_PRINT);
-  create_menu_item_with_mnemonic (menu, "ToggleSizePaint", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TOGGLESIZEPAINT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGELEFT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGERIGHT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEUP);
-  create_menu_item_with_mnemonic (menu, "NaturalizePatch", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_NATURALIZE);
-  create_menu_item_with_mnemonic (menu, "SnapPatchToGrid", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SNAPTOGRID);
-  create_menu_item_with_mnemonic (menu, "SelectAllOfType", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_ALL);
-  create_menu_item_with_mnemonic (menu, "CycleOutlineStyle", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_OUTLINESTYLE);
-  create_menu_item_with_mnemonic (menu, "TextureWindowScaleup", GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEUP);
-  create_menu_item_with_mnemonic (menu, "TextureWindowScaledown", GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "DecPatchColumn",		GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETECOLUMN);
+  create_menu_item_with_mnemonic (menu, "DecPatchRow",			GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETEROW);
+  create_menu_item_with_mnemonic (menu, "IncPatchColumn",		GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTCOLUMN);
+  create_menu_item_with_mnemonic (menu, "IncPatchRow",			GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTROW);
+  create_menu_item_with_mnemonic (menu, "InvertCurveTextureX",	GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREY);
+  create_menu_item_with_mnemonic (menu, "InvertCurveTextureY",	GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREX);
+
+  create_menu_item_with_mnemonic (menu, "MoveSelectionUP",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEUP);
+  create_menu_item_with_mnemonic (menu, "MoveSelectionDOWN",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEDOWN);
+  create_menu_item_with_mnemonic (menu, "CycleOutlineStyle",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_OUTLINESTYLE);
+  create_menu_item_with_mnemonic (menu, "ToggleSizePaint",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TOGGLESIZEPAINT);
+  create_menu_item_with_mnemonic (menu, "DumpSelectedBrush",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_PRINT);
+
+  create_menu_item_with_mnemonic (menu, "TexRotateClock",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK);
+  create_menu_item_with_mnemonic (menu, "TexRotateCounter",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER);
+  create_menu_item_with_mnemonic (menu, "TexRotateClock1deg",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG);
+  create_menu_item_with_mnemonic (menu, "TexRotateCounter1deg",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG);
+
+  create_menu_item_with_mnemonic (menu, "TexScaleUp",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEUP);
+  create_menu_item_with_mnemonic (menu, "TexScaleDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "TexScaleLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALELEFT);
+  create_menu_item_with_mnemonic (menu, "TexScaleRight",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALERIGHT);
+
+  create_menu_item_with_mnemonic (menu, "TexShiftUp",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP);
+  create_menu_item_with_mnemonic (menu, "TexShiftUp1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN);
+  create_menu_item_with_mnemonic (menu, "TexShiftDown1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT);
+  create_menu_item_with_mnemonic (menu, "TexShiftLeft1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftRight",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT);
+  create_menu_item_with_mnemonic (menu, "TexShiftRight1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU);
+
+  create_menu_item_with_mnemonic (menu, "TextureWindowScaledown",GTK_SIGNAL_FUNC(HandleCommand), ID_TEXTUREWINDOW_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "TextureWindowScaleup",	GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEUP);
+
+  create_menu_item_with_mnemonic (menu, "ToggleRealtime",		GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CAMERAUPDATE);
+  create_menu_item_with_mnemonic (menu, "ToggleCrosshairs",		GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CROSSHAIR);
+  create_menu_item_with_mnemonic (menu, "ViewTextures",			GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_TEXTURE);
+
+  create_menu_item_with_mnemonic (menu, "CameraAngleUp",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEUP);
+  create_menu_item_with_mnemonic (menu, "CameraAngleDown",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEDOWN);
+  create_menu_item_with_mnemonic (menu, "CameraUp",				GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_UP);
+  create_menu_item_with_mnemonic (menu, "CameraDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_DOWN);
+
+  create_menu_item_with_mnemonic (menu, "CameraForward",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_FORWARD);
+  create_menu_item_with_mnemonic (menu, "CameraBack",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_BACK);
+  create_menu_item_with_mnemonic (menu, "CameraLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_LEFT);
+  create_menu_item_with_mnemonic (menu, "CameraRight",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_RIGHT);
+  create_menu_item_with_mnemonic (menu, "CameraStrafeRight",	GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFERIGHT);
+  create_menu_item_with_mnemonic (menu, "CameraStrafeLeft",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFELEFT);
+
+  create_menu_item_with_mnemonic (menu, "GridUp",				GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_NEXT);
+  create_menu_item_with_mnemonic (menu, "GridDown",				GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_PREV);
+  create_menu_item_with_mnemonic (menu, "ToggleGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
+
+  create_menu_item_with_mnemonic (menu, "BendMode",				GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
+  create_menu_item_with_mnemonic (menu, "PatchInspector",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
+  create_menu_item_with_mnemonic (menu, "NaturalizePatch",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_NATURALIZE);
+  create_menu_item_with_mnemonic (menu, "Patch TAB",			GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
+  create_menu_item_with_mnemonic (menu, "Patch TAB",			GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);			// AEon: Comment out duplicate call?
+
+  create_menu_item_with_mnemonic (menu, "SelectAllOfType",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_ALL);
+  create_menu_item_with_mnemonic (menu, "MouseRotate",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_MOUSEROTATE);
+  create_menu_item_with_mnemonic (menu, "SnapToGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SNAPTOGRID); // Was SnapPatchToGrid, should be SnapToGrid
+  create_menu_item_with_mnemonic (menu, "FitTexture",			GTK_SIGNAL_FUNC (HandleCommand), IDC_BTN_FACEFIT);
+
+// AEon: Redundant entries in Hidden menu, since they are in Selection menu, Select! (though that can be ifndef QUAKE3 conditional)
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeUp",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEUP);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeDown",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEDOWN);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeLeft",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGELEFT);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeRight",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGERIGHT);
 
   g_bIgnoreCommands--;
 }
@@ -7450,10 +7475,10 @@ void MainFrame::OnPatchTab()
   }
 }
 
-void MainFrame::OnSelectFuncGroup() 
+void MainFrame::OnSelectFuncGroup()
 {
 	// check to see if the selected brush is part of a func group
-	// if it is, deselect everything and reselect the next brush 
+	// if it is, deselect everything and reselect the next brush
 	// in the group
 	brush_t *b = selected_brushes.next;
 	entity_t * e;
@@ -7467,7 +7492,7 @@ void MainFrame::OnSelectFuncGroup()
 	}
 }
 
-void MainFrame::OnCameraForward(bool keydown) 
+void MainFrame::OnCameraForward(bool keydown)
 {
   if (g_PrefsDlg.m_bCamDiscrete && (m_pCamWnd && !m_pCamWnd->m_bFreeMove) )
   {
