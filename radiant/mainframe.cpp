@@ -408,7 +408,7 @@ SCommandInfo g_Commands[] =
   {"PatchEndCap",				0, 0,						ID_CURVE_PATCHENDCAP, "menu_curve_patchendcap"},				// End Cap
   {"PatchBevel",				0, 0,						ID_CURVE_PATCHBEVEL, "menu_curve_patchbevel"},					// Bevel
 
-  // -- More End Caps, Bevels -- 							// *** ID and Name swap in menu calls (fix!?), i.e. EndCap uses Bevel ID!
+  // -- More End Caps, Bevels --
   {"PatchSquareEndCap",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP, "menu_curve_moreendcapsbevels_squareendcap"},	// Square End Cap
   {"PatchSquareBevel",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL, "menu_curve_moreendcapsbevels_squarebevel"},	// Square Bevel
 
@@ -450,7 +450,7 @@ SCommandInfo g_Commands[] =
 
 
 // === Help menu ===			// ***Skipping most entries for now.
-  // Manual		F1				// ***Shortcut F1 "hacked" into menu code.
+  // Manual		F1				// ***Shortcut F1 "hacked" into menu code. Does not work.
 
   // -- General --
   // ...
@@ -1731,11 +1731,11 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_NEXTLEAKSPOT);
   item = create_menu_item_with_mnemonic (menu, _("Previous Leak Spot"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PREVIOUSLEAKSPOT);
-  // ***AEon: Print XY View saved BMP of that view... image broken!
+  // ***AEon: Print XY View saves BMP of that view... image broken!
   create_menu_item_with_mnemonic (menu, _("_Print XY View"), GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PRINTXY);
   item = create_menu_item_with_mnemonic (menu, _("_Select Entity Color..."),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_SELECTENTITYCOLOR);
-  g_object_set_data (G_OBJECT (window), "menu_misc_selectentitycolor", item);
+  g_object_set_data (G_OBJECT (window), "menu_misc_select_entitycolor", item);
 
   // Region menu
   menu = create_sub_menu_with_mnemonic (menu_bar, _("_Region"));
