@@ -368,8 +368,8 @@ SCommandInfo g_Commands[] =
 
   {"SetGamma",				0, 0,						ID_MISC_GAMMA, "menu_misc_gamma"},						// Gamma...
   {"FindBrush",				'F', RAD_CONTROL|RAD_SHIFT,	ID_MISC_FINDBRUSH, "menu_misc_findbrush"},				// Find Brush...
-  {"NextLeakSpot",			'K', RAD_CONTROL|RAD_SHIFT,	ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},		// ***AEon: Should swap K,L!
-  {"PrevLeakSpot",			'L', RAD_CONTROL|RAD_SHIFT,	ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
+  {"NextLeakSpot",			'L', RAD_CONTROL|RAD_SHIFT,	ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},
+  {"PrevLeakSpot",			'K', RAD_CONTROL|RAD_SHIFT,	ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
   {"PrintXYView",			0, 0,						ID_MISC_PRINTXY, "menu_misc_printxy"},					// Print XY View (Screen Grab)
   {"EntityColor",			'K', 0,						ID_MISC_SELECTENTITYCOLOR, "menu_misc_select_entitycolor"},
 
