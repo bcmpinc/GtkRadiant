@@ -265,7 +265,7 @@ SCommandInfo g_Commands[] =
   {"SelectInside",		0, 0,						ID_SELECTION_SELECTINSIDE, "menu_selection_selectinside"},				// Select Inside
   //  {"ViewGroups",	'G', 0,						ID_VIEW_GROUPS, "menu_view_groups"}, 									// (temporary disabled)
   {"SelectFuncGroup",	'G', 0,						ID_SELECT_FUNC_GROUP, "menu_select_func_group"},
-  {"SelectNudgeLeft",	GDK_Left, RAD_ALT,			ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},		// ***AEon: These cursor shortcuts are not shown in the menu?
+  {"SelectNudgeLeft",	GDK_Left, RAD_ALT,			ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},
   {"SelectNudgeRight",	GDK_Right, RAD_ALT,			ID_SELECTION_SELECT_NUDGERIGHT, "menu_selection_select_nudgeright"},
   {"SelectNudgeUp",		GDK_Up, RAD_ALT,			ID_SELECTION_SELECT_NUDGEUP, "menu_selection_select_nudgeup"},
   {"SelectNudgeDown",	GDK_Down, RAD_ALT,			ID_SELECTION_SELECT_NUDGEDOWN, "menu_selection_select_nudgedown"},
@@ -409,8 +409,8 @@ SCommandInfo g_Commands[] =
   {"PatchBevel",				0, 0,						ID_CURVE_PATCHBEVEL, "menu_curve_patchbevel"},					// Bevel
 
   // -- More End Caps, Bevels -- 							// *** ID and Name swap in menu calls (fix!?), i.e. EndCap uses Bevel ID!
-  {"PatchSquareEndCap",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL, "menu_curve_moreendcapsbevels_squarebevel"},	// Square End Cap
-  {"PatchSquareBevel",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP, "menu_curve_moreendcapsbevels_squareendcap"},	// Square Bevel
+  {"PatchSquareEndCap",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP, "menu_curve_moreendcapsbevels_squareendcap"},	// Square End Cap
+  {"PatchSquareBevel",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL, "menu_curve_moreendcapsbevels_squarebevel"},	// Square Bevel
 
   {"PatchCone",					0, 0,						ID_CURVE_PATCHCONE, "menu_curve_patchcone"},					// Cone
   //*Sphere													// *** Ghosted probably never worked - remove in menu?
@@ -827,7 +827,7 @@ gint HandleCommand (GtkWidget *widget, gpointer data)
     case ID_CURVE_PATCHENDCAP: g_pParentWnd->OnCurvePatchendcap (); break;
     case ID_CURVE_PATCHBEVEL: g_pParentWnd->OnCurvePatchbevel (); break;
     case ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL: g_pParentWnd->OnCurveMoreendcapsbevelsSquarebevel (); break;
-    case ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP: g_pParentWnd->OnCurveMoreendcapsbevelsSquareendcap();break;
+    case ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP: g_pParentWnd->OnCurveMoreendcapsbevelsSquareendcap (); break;
     case ID_CURVE_PATCHCONE: g_pParentWnd->OnCurvePatchcone (); break;
     case ID_CURVE_SIMPLEPATCHMESH: g_pParentWnd->OnCurveSimplepatchmesh (); break;
     case ID_CURVE_INSERT_INSERTCOLUMN: g_pParentWnd->OnCurveInsertInsertcolumn (); break;
@@ -1801,9 +1801,9 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu_in_menu);
   create_menu_item_with_mnemonic (menu_in_menu, _("Square End Cap"),
-		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Square Bevel"),
 		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP);
+  create_menu_item_with_mnemonic (menu_in_menu, _("Square Bevel"),
+		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Cone"), GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHCONE);
   item = create_menu_item_with_mnemonic (menu, _("Sphere"),
@@ -6857,7 +6857,7 @@ void MainFrame::OnCurveMoreendcapsbevelsSquarebevel()
   Undo_Start("square bevel");
   Undo_AddBrushList(&selected_brushes);
 
-  Patch_BrushToMesh(false, true, false, true);
+  Patch_BrushToMesh(false, false, true, true);
   Sys_UpdateWindows (W_ALL);
 
   Undo_EndBrushList(&selected_brushes);
@@ -6869,7 +6869,7 @@ void MainFrame::OnCurveMoreendcapsbevelsSquareendcap()
   Undo_Start("square endcap");
   Undo_AddBrushList(&selected_brushes);
 
-  Patch_BrushToMesh(false, false, true, true);
+  Patch_BrushToMesh(false, true, false, true);
   Sys_UpdateWindows (W_ALL);
 
   Undo_EndBrushList(&selected_brushes);
