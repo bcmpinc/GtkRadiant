@@ -1976,8 +1976,6 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   //       1-0 shortcut names showing in the Grid menu. Commenting this out fixes this, and KP1-KP0 still work.
   //       Existing menu call using "ID_GRID_1" (SetGrid1) may make alias command (SetGrid1Alt) call also using
   //       "ID_GRID_1" redundant in the Hidden menu.
-  //       Update: Suddenly the below entries do not "hide" the shortcut names in the Grid menu, WTH?
-*/
   create_menu_item_with_mnemonic (menu, "SetGrid1Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_1);	// Alternate command aliases,
   create_menu_item_with_mnemonic (menu, "SetGrid2Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_2);	// allowing external rebind!
   create_menu_item_with_mnemonic (menu, "SetGrid4Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_4);
@@ -1988,6 +1986,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu, "SetGrid128Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_128);
   create_menu_item_with_mnemonic (menu, "SetGrid256Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_256);
   create_menu_item_with_mnemonic (menu, "ToggleGridAlt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
+*/
 
   create_menu_item_with_mnemonic (menu, "BendMode",				GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
   create_menu_item_with_mnemonic (menu, "PatchInspector",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
