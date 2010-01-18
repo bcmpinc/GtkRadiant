@@ -283,26 +283,17 @@ SCommandInfo g_Commands[] =
 
 
 // === Grid menu ===
-  {"SetGrid025",		0, 0,			ID_GRID_025, "menu_grid_025"},	// Grid 0.25u
-  {"SetGrid05",			0, 0,			ID_GRID_05, "menu_grid_05"},	// Grid 0.5u
-  {"SetGrid1",			'1', 0,			ID_GRID_1, "menu_grid_1"},		// ***Twice bound
-  {"SetGrid1",			GDK_KP_1, 0,	ID_GRID_1, "menu_grid_1"},
+  {"SetGrid025",		0, 0,			ID_GRID_025, "menu_grid_025"},		// Grid 0.25u
+  {"SetGrid05",			0, 0,			ID_GRID_05, "menu_grid_05"},		// Grid 0.5u
+  {"SetGrid1",			'1', 0,			ID_GRID_1, "menu_grid_1"},
   {"SetGrid2",			'2', 0,			ID_GRID_2, "menu_grid_2"},
-  {"SetGrid2",			GDK_KP_2, 0,	ID_GRID_2, "menu_grid_2"},
   {"SetGrid4",			'3', 0,			ID_GRID_4, "menu_grid_4"},
-  {"SetGrid4",			GDK_KP_3, 0,	ID_GRID_4, "menu_grid_4"},
   {"SetGrid8",			'4', 0,			ID_GRID_8, "menu_grid_8"},
-  {"SetGrid8",			GDK_KP_4, 0,	ID_GRID_8, "menu_grid_8"},
   {"SetGrid16",			'5', 0,			ID_GRID_16, "menu_grid_16"},
-  {"SetGrid16",			GDK_KP_5, 0,	ID_GRID_16, "menu_grid_16"},
   {"SetGrid32",			'6', 0,			ID_GRID_32, "menu_grid_32"},
-  {"SetGrid32",			GDK_KP_6, 0,	ID_GRID_32, "menu_grid_32"},
   {"SetGrid64",			'7', 0,			ID_GRID_64, "menu_grid_64"},
-  {"SetGrid64",			GDK_KP_7, 0,	ID_GRID_64, "menu_grid_64"},
   {"SetGrid128",		'8', 0,			ID_GRID_128, "menu_grid_128"},
-  {"SetGrid128",		GDK_KP_8, 0,	ID_GRID_128, "menu_grid_128"},
   {"SetGrid256",		'9', 0,			ID_GRID_256, "menu_grid_256"},
-  {"SetGrid256",		GDK_KP_9, 0,	ID_GRID_256, "menu_grid_256"},
   {"ToggleSnapToGrid",	0, 0,			ID_SNAPTOGRID, "menu_snaptogrid"},	// Snap to Grid (global setting)
 
 
@@ -519,7 +510,17 @@ SCommandInfo g_Commands[] =
   {"GridUp",					']', 0,									ID_GRID_NEXT, "menu_grid_next"},	// [ ] not accessible on German keyboard!
   {"GridDown",					'[', 0,									ID_GRID_PREV, "menu_grid_prev"},
   {"ToggleGrid",				'0', 0,									ID_GRID_TOGGLE, "menu_grid_toggle"},
-  {"ToggleGrid",				GDK_KP_0, 0,							ID_GRID_TOGGLE, "menu_grid_toggle"},
+
+  {"SetGrid1Alt",				GDK_KP_1, 0,							ID_GRID_1, "menu_grid_1"},			// Alternate command aliases,
+  {"SetGrid2Alt",				GDK_KP_2, 0,							ID_GRID_2, "menu_grid_2"},			// allowing external rebind!
+  {"SetGrid4Alt",				GDK_KP_3, 0,							ID_GRID_4, "menu_grid_4"},
+  {"SetGrid8Alt",				GDK_KP_4, 0,							ID_GRID_8, "menu_grid_8"},
+  {"SetGrid16Alt",				GDK_KP_5, 0,							ID_GRID_16, "menu_grid_16"},
+  {"SetGrid32Alt",				GDK_KP_6, 0,							ID_GRID_32, "menu_grid_32"},
+  {"SetGrid64Alt",				GDK_KP_7, 0,							ID_GRID_64, "menu_grid_64"},
+  {"SetGrid128Alt",				GDK_KP_8, 0,							ID_GRID_128, "menu_grid_128"},
+  {"SetGrid256Alt",				GDK_KP_9, 0,							ID_GRID_256, "menu_grid_256"},
+  {"ToggleGridAlt",				GDK_KP_0, 0,							ID_GRID_TOGGLE, "menu_grid_toggle"},
 
   {"BendMode",					'B', 0,									ID_PATCH_BEND, "menu_patch_bend"},
   {"PatchInspector",			'S', RAD_SHIFT,							ID_PATCH_INSPECTOR, "menu_patch_inspector"},
@@ -1970,6 +1971,24 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu, "GridDown",				GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_PREV);
   create_menu_item_with_mnemonic (menu, "ToggleGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
 
+/*
+  // AEon: These entries should be required to make the accellerators KP1-KP0 work, but they break the 
+  //       1-0 shortcut names showing in the Grid menu. Commenting this out fixes this, and KP1-KP0 still work.
+  //       Existing menu call using "ID_GRID_1" (SetGrid1) may make alias command (SetGrid1Alt) call also using
+  //       "ID_GRID_1" redundant in the Hidden menu.
+  //       Update: Suddenly the below entries do not "hide" the shortcut names in the Grid menu, WTH?
+*/
+  create_menu_item_with_mnemonic (menu, "SetGrid1Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_1);	// Alternate command aliases,
+  create_menu_item_with_mnemonic (menu, "SetGrid2Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_2);	// allowing external rebind!
+  create_menu_item_with_mnemonic (menu, "SetGrid4Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_4);
+  create_menu_item_with_mnemonic (menu, "SetGrid8Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_8);
+  create_menu_item_with_mnemonic (menu, "SetGrid16Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_16);
+  create_menu_item_with_mnemonic (menu, "SetGrid32Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_32);
+  create_menu_item_with_mnemonic (menu, "SetGrid64Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_64);
+  create_menu_item_with_mnemonic (menu, "SetGrid128Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_128);
+  create_menu_item_with_mnemonic (menu, "SetGrid256Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_256);
+  create_menu_item_with_mnemonic (menu, "ToggleGridAlt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
+
   create_menu_item_with_mnemonic (menu, "BendMode",				GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
   create_menu_item_with_mnemonic (menu, "PatchInspector",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
   create_menu_item_with_mnemonic (menu, "NaturalizePatch",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_NATURALIZE);
@@ -1981,7 +2000,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu, "SnapToGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SNAPTOGRID); // Was SnapPatchToGrid, should be SnapToGrid
   create_menu_item_with_mnemonic (menu, "FitTexture",			GTK_SIGNAL_FUNC (HandleCommand), IDC_BTN_FACEFIT);
 
-// AEon: Redundant entries in Hidden menu, since they are in Selection menu, Select! (though that can be ifndef QUAKE3 conditional)
+// AEon: Redundant entries in Hidden menu, since they are in Selection menu, Select (though those can be ifndef QUAKE3 conditional)!
 //  create_menu_item_with_mnemonic (menu, "SelectNudgeUp",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEUP);
 //  create_menu_item_with_mnemonic (menu, "SelectNudgeDown",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEDOWN);
 //  create_menu_item_with_mnemonic (menu, "SelectNudgeLeft",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGELEFT);
