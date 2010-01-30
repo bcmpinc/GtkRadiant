@@ -1,0 +1,7 @@
+/build
+/install
+*.pyc
+*~
+.*
+!.gitignore
+site.sconf
