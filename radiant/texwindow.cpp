@@ -212,6 +212,8 @@ void SetTexParameters (void)
     qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     break;
   }
+  
+  QE_CheckOpenGLForErrors();
 }
 
 /*
@@ -301,6 +303,7 @@ void Texture_SetMode(int iMenu)
   qglBindTexture( GL_TEXTURE_2D, 0 );
 
   qglFinish();
+  QE_CheckOpenGLForErrors();  
 
   if (g_pParentWnd->GetCamWnd()->Camera()->draw_mode != cd_texture)
   {
@@ -387,6 +390,7 @@ qtexture_t *QERApp_LoadTextureRGBA(unsigned char* pPixels, int nWidth, int nHeig
   qglBindTexture( GL_TEXTURE_2D, q->texture_number );
 
   Sys_Printf("Sending texture to OpenGL. size=%dx%d id=%d\n", nWidth, nHeight, q->texture_number );
+  QE_CheckOpenGLForErrors();
 
   SetTexParameters();
 
@@ -435,6 +439,8 @@ qtexture_t *QERApp_LoadTextureRGBA(unsigned char* pPixels, int nWidth, int nHeig
   qglBindTexture(GL_TEXTURE_2D, 0);
   if (resampled)
     free(outpixels);
+
+  QE_CheckOpenGLForErrors();
 
   return q;
 }
@@ -1504,6 +1510,8 @@ void Texture_Draw (int width, int height)
   qglEnable (GL_TEXTURE_2D);
 
   qglPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+  QE_CheckOpenGLForErrors();
+  
   g_qeglobals.d_texturewin.width = width;
   g_qeglobals.d_texturewin.height = height;
 
@@ -1548,8 +1556,8 @@ void Texture_Draw (int width, int height)
 	      qglVertex2f (x+4+nWidth,y-g_qeglobals.m_nGlFontHeight+4);
 	      qglEnd ();
 
-	      qglEnable (GL_TEXTURE_2D);
 	      qglLineWidth (1);
+		  QE_CheckOpenGLForErrors();
       }
       else
       {
@@ -1566,7 +1574,8 @@ void Texture_Draw (int width, int height)
 	        qglVertex2f (x+1+nWidth,y-nHeight-1-g_qeglobals.m_nGlFontHeight);
 	        qglVertex2f (x+1+nWidth,y+1-g_qeglobals.m_nGlFontHeight);
 	        qglEnd ();
-	        qglEnable (GL_TEXTURE_2D);
+			
+		    QE_CheckOpenGLForErrors();
 	      }
 
 	      // highlight in-use textures
@@ -1580,11 +1589,14 @@ void Texture_Draw (int width, int height)
 	        qglVertex2f (x+3+nWidth,y-nHeight-3-g_qeglobals.m_nGlFontHeight);
 	        qglVertex2f (x+3+nWidth,y+3-g_qeglobals.m_nGlFontHeight);
 	        qglEnd ();
-	        qglEnable (GL_TEXTURE_2D);
+			
+		    QE_CheckOpenGLForErrors();
 	      }
       }
 
+	  
       // Draw the texture
+      qglEnable (GL_TEXTURE_2D);
       qglBindTexture (GL_TEXTURE_2D, q->texture_number);
       QE_CheckOpenGLForErrors();
       qglColor3f (1,1,1);
@@ -1598,6 +1610,7 @@ void Texture_Draw (int width, int height)
       qglTexCoord2f (0,1);
       qglVertex2f (x,y-g_qeglobals.m_nGlFontHeight-nHeight);
       qglEnd ();
+	  QE_CheckOpenGLForErrors();
 
       // draw the texture name
       qglDisable (GL_TEXTURE_2D);
@@ -1625,6 +1638,7 @@ void Texture_Draw (int width, int height)
   // reset the current texture
   qglBindTexture(GL_TEXTURE_2D, 0);
   qglFinish();
+  QE_CheckOpenGLForErrors();
 }
 
 //++timo seems we only know hard inits now..
