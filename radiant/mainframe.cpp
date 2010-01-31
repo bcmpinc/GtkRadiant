@@ -98,16 +98,16 @@ GtkAccelGroup* global_accel;
 
 void Select_Ungroup ();
 
-// command mapping stuff
+// Command Mapping stuff
 //
 // m_strCommand is the command string
-// m_nKey is the GDK_??? equivelant
+// m_nKey is the GDK_??? equivelant - AEon: Set to 0 for a command without defined key.
 // m_nModifiers are key states as follows
 //  bit
-//    1 - shift
-//    2 - alt
-//    4 - control
-//    8 - press only
+//   0   1 - shift         RAD_SHIFT
+//   1   2 - alt           RAD_ALT
+//   2   4 - control       RAD_CONTROL
+//   3   8 - press only    RAD_PRESS
 //
 #define	SPEED_MOVE	32
 #define	SPEED_TURN	22.5
@@ -115,178 +115,423 @@ void Select_Ungroup ();
 // NOTE: the menu item field is REQUIRED, Gtk uses it to bind the keyboard shortcut
 // - if you add a command here and you don't want a menu item, use the "hidden" menu
 // - if you decide to add a menu item, check if it's not in the "hidden" menu already
+// AEon: Qualifiers using RAD_ variables for better readability.
+//       Lines with menu entry comments have a new command name for shortcuts.ini.
 SCommandInfo g_Commands[] =
 {
-  {"CycleOutlineStyle", 'J', 0x00, ID_SELECTION_OUTLINESTYLE, "menu_selection_outlinestyle"},
-  {"CSGMerge", 'U', 0x04, ID_SELECTION_CSGMERGE, "menu_selection_csgmerge"},
-  {"CSGSubtract", 'U', 0x01, ID_SELECTION_CSGSUBTRACT, "menu_selection_csgsubstract"},
-  //  {"ViewGroups", 'G', 0x00, ID_VIEW_GROUPS, "menu_view_groups"}, (temporary disabled)
-  {"SelectFuncGroup", 'G', 0x00, ID_SELECT_FUNC_GROUP, "menu_select_func_group"},
-  {"HideSelected", 'H', 0x00, ID_VIEW_HIDESHOW_HIDESELECTED, "menu_view_hideshow_hideselected"},
-  {"ShowHidden", 'H', 0x01, ID_VIEW_HIDESHOW_SHOWHIDDEN, "menu_view_hideshow_showhidden"},
-  {"BendMode", 'B', 0x00, ID_PATCH_BEND, "menu_patch_bend"},
-  {"FitTexture", 'B', 0x01, IDC_BTN_FACEFIT, "menu_idc_btn_facefit"},
-  {"ViewTextures", 'T', 0, ID_VIEW_TEXTURE, "menu_view_texture"},
-  {"ThickenPatch", 'T', 0x04, ID_CURVE_THICKEN, "menu_curve_thicken"},
-  {"MakeOverlayPatch", 'Y', 0, ID_CURVE_OVERLAY_SET, "menu_curve_overlay_set"},
-  {"ClearPatchOverlays", 'L', 0x04, ID_CURVE_OVERLAY_CLEAR, "menu_curve_overlay_clear"},
-  {"SurfaceInspector", 'S', 0, ID_TEXTURES_INSPECTOR, "menu_textures_inspector"},
-  {"PatchInspector", 'S', 0x01, ID_PATCH_INSPECTOR, "menu_patch_inspector"},
-  {"RedisperseRows", 'E', 0x04, ID_CURVE_REDISPERSE_ROWS, "menu_curve_redisperse_rows"},
-  {"RedisperseIntermediateCols", 'E', 0x05, ID_CURVE_REDISPERSE_INTERMEDIATE_COLS, "menu_curve_redisperse_cols"},
-  {"InvertCurveTextureX", 'I', 0x05, ID_CURVE_NEGATIVETEXTUREY, "menu_curve_negativetexturey"},
-  {"InvertCurveTextureY", 'I', 0x01, ID_CURVE_NEGATIVETEXTUREX, "menu_curve_negativetexturex"},
-  {"InvertCurve", 'I', 0x04, ID_CURVE_NEGATIVE, "menu_curve_negative"},
-  {"IncPatchColumn", GDK_KP_Add, 0x05, ID_CURVE_INSERTCOLUMN, "menu_curve_insertcolumn"},
-  {"IncPatchRow", GDK_KP_Add, 0x04, ID_CURVE_INSERTROW, "menu_curve_insertrow"},
-  {"DecPatchColumn", GDK_KP_Subtract, 0x05, ID_CURVE_DELETECOLUMN, "menu_curve_deletecolumn"},
-  {"DecPatchRow", GDK_KP_Subtract, 0x04, ID_CURVE_DELETEROW, "menu_curve_deleterow"},
-  {"Patch TAB", GDK_Tab, 0x00, ID_PATCH_TAB, "menu_patch_tab"},
-  {"Patch TAB", GDK_Tab, 0x01, ID_PATCH_TAB, "menu_patch_tab"},
-  {"SelectNudgeDown", GDK_Down, 0x02, ID_SELECTION_SELECT_NUDGEDOWN, "menu_selection_select_nudgedown"},
-  {"EntityColor",'K', 0, ID_MISC_SELECTENTITYCOLOR, "menu_misc_select_entitycolor"},
-  {"CameraForward", GDK_Up, 0, ID_CAMERA_FORWARD, "menu_camera_forward"},
-  {"CameraBack", GDK_Down, 0, ID_CAMERA_BACK, "menu_camera_back"},
-  {"CameraLeft", GDK_Left, 0, ID_CAMERA_LEFT, "menu_camera_left"},
-  {"CameraRight", GDK_Right, 0, ID_CAMERA_RIGHT, "menu_camera_right"},
-  {"CameraUp", 'D', 0, ID_CAMERA_UP, "menu_camera_up"},
-  {"CameraDown", 'C', 0, ID_CAMERA_DOWN, "menu_camera_down"},
-  {"CameraAngleUp", 'A', 0, ID_CAMERA_ANGLEUP, "menu_camera_angleup"},
-  {"CameraAngleDown", 'Z', 0, ID_CAMERA_ANGLEDOWN, "menu_camera_angledown"},
-  {"CameraStrafeRight", GDK_period, 0, ID_CAMERA_STRAFERIGHT, "menu_camera_straferight"},
-  {"CameraStrafeLeft", GDK_comma, 0, ID_CAMERA_STRAFELEFT, "menu_camera_strafeleft"},
-  {"ToggleGrid", '0', 0, ID_GRID_TOGGLE, "menu_grid_toggle"},
-  {"SetGrid1", '1', 0, ID_GRID_1, "menu_grid_1"},
-  {"SetGrid2", '2', 0, ID_GRID_2, "menu_grid_2"},
-  {"SetGrid4", '3', 0, ID_GRID_4, "menu_grid_4"},
-  {"SetGrid8", '4', 0, ID_GRID_8, "menu_grid_8"},
-  {"SetGrid16", '5', 0, ID_GRID_16, "menu_grid_16"},
-  {"SetGrid32", '6', 0, ID_GRID_32, "menu_grid_32"},
-  {"SetGrid64", '7', 0, ID_GRID_64, "menu_grid_64"},
-  {"SetGrid128", '8', 0, ID_GRID_128, "menu_grid_128"},
-  {"SetGrid256", '9', 0, ID_GRID_256, "menu_grid_256"},
-  {"ToggleGrid", GDK_KP_0, 0, ID_GRID_TOGGLE, "menu_grid_toggle"},
-  {"SetGrid1", GDK_KP_1, 0, ID_GRID_1, "menu_grid_1"},
-  {"SetGrid2", GDK_KP_2, 0, ID_GRID_2, "menu_grid_2"},
-  {"SetGrid4", GDK_KP_3, 0, ID_GRID_4, "menu_grid_4"},
-  {"SetGrid8", GDK_KP_4, 0, ID_GRID_8, "menu_grid_8"},
-  {"SetGrid16", GDK_KP_5, 0, ID_GRID_16, "menu_grid_16"},
-  {"SetGrid32", GDK_KP_6, 0, ID_GRID_32, "menu_grid_32"},
-  {"SetGrid64", GDK_KP_7, 0, ID_GRID_64, "menu_grid_64"},
-  {"SetGrid128", GDK_KP_8, 0, ID_GRID_128, "menu_grid_128"},
-  {"SetGrid256", GDK_KP_9, 0, ID_GRID_256, "menu_grid_256"},
-  {"DragEdges", 'E', 0, ID_SELECTION_DRAGEDGES, "menu_selection_dragedges"},
-  {"DragVertices", 'V', 0, ID_SELECTION_DRAGVERTECIES, "menu_selection_dragvertecies"},
-  {"ViewEntityInfo", 'N', 0, ID_VIEW_ENTITY, "menu_view_entity"},
-  //  {"ViewConsole", 'O', 0, ID_VIEW_CONSOLE, "menu_0,"},
-  {"CloneSelection", GDK_space, 0, ID_SELECTION_CLONE, "menu_selection_clone"},
-  {"DeleteSelection", GDK_BackSpace, 0, ID_SELECTION_DELETE, "menu_selection_delete"},
-  {"UnSelectSelection", GDK_Escape, 0, ID_SELECTION_DESELECT, "menu_selection_deselect"},
-  {"CenterView", GDK_End, 0, ID_VIEW_CENTER, "menu_view_center"},
-  {"ZoomOut", GDK_Insert, 0, ID_VIEW_ZOOMOUT, "menu_view_zoomout"},
-  {"ZoomIn", GDK_Delete, 0, ID_VIEW_ZOOMIN, "menu_view_zoomin"},
-  {"UpFloor", GDK_Prior, 0, ID_VIEW_UPFLOOR, "menu_view_upfloor"},
-  {"DownFloor", GDK_Next, 0, ID_VIEW_DOWNFLOOR, "menu_view_downfloor"},
-  {"ToggleClipper", 'X', 0, ID_VIEW_CLIPPER, "menu_view_clipper"},
-  {"ToggleCrosshairs", 'X', 0x01, ID_VIEW_CROSSHAIR, "menu_view_crosshair"},
-  {"TogTexLock", 'T', 0x01, ID_TOGGLE_LOCK, "menu_toggle_lock"},
-  {"TogTexRotLock", 'R', 0x01, ID_TOGGLE_ROTATELOCK, "menu_toggle_rotatelock"},
-  {"ToggleRealtime", 'R', 0x04, ID_VIEW_CAMERAUPDATE, "menu_view_cameraupdate"},
-  {"EntityList", 'L', 0, ID_EDIT_ENTITYINFO, "menu_edit_entityinfo"},
-  {"Preferences", 'P', 0, ID_PREFS, "menu_prefs"},
-  {"ToggleCamera", 'C', 0x05, ID_TOGGLECAMERA, "menu_togglecamera"},
-  {"ToggleConsole", 'O', 0, ID_TOGGLECONSOLE, "menu_toggleconsole"},
-  {"ToggleView", 'V', 0x05, ID_TOGGLEVIEW, "menu_toggleview"},
-  {"ToggleZ", 'Z', 0x05, ID_TOGGLEZ, "menu_togglez"},
-  {"ConnectSelection", 'K', 0x04, ID_SELECTION_CONNECT, "menu_selection_connect"},
-  {"Brush3Sided", '3', 0x04, ID_BRUSH_3SIDED, "menu_brush_3sided"},
-  {"Brush4Sided", '4', 0x04, ID_BRUSH_4SIDED, "menu_brush_4sided"},
-  {"Brush5Sided", '5', 0x04, ID_BRUSH_5SIDED, "menu_brush_5sided"},
-  {"Brush6Sided", '6', 0x04, ID_BRUSH_6SIDED, "menu_brush_6sided"},
-  {"Brush7Sided", '7', 0x04, ID_BRUSH_7SIDED, "menu_brush_7sided"},
-  {"Brush8Sided", '8', 0x04, ID_BRUSH_8SIDED, "menu_brush_8sided"},
-  {"Brush9Sided", '9', 0x04, ID_BRUSH_9SIDED, "menu_brush_9sided"},
-  {"MatrixTranspose", 'M', 0x05, ID_CURVE_MATRIX_TRANSPOSE, "menu_curve_matrix_transpose"},
-  {"MakeDetail", 'M', 0x04, ID_SELECTION_MAKE_DETAIL, "menu_selection_make_detail"},
-  {"MapInfo", 'M', 0, ID_EDIT_MAPINFO, "menu_edit_mapinfo"},
-  {"NextLeakSpot", 'K', 0x05, ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},
-  {"PrevLeakSpot", 'L', 0x05, ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
-  {"FileOpen", 'O', 0x04, ID_FILE_OPEN, "menu_file_open"},
-  {"FileSave", 'S', 0x04, ID_FILE_SAVE, "menu_file_save"},
-  //% {"Exit", 'X', 0x04, ID_FILE_EXIT, "menu_file_exit"}, // ydnar: Ctrl+X should be cut
-  {"CenterXYView", GDK_Tab, 0x05, ID_VIEW_CENTERVIEW, "menu_view_centerview"},
-  {"NextView", GDK_Tab, 0x04, ID_VIEW_NEXTVIEW, "menu_view_nextview"},
-  {"ClipSelected", GDK_Return, 0x00, ID_CLIP_SELECTED, "menu_clip_selected"},
-  {"SplitSelected", GDK_Return, 0x01, ID_SPLIT_SELECTED, "menu_split_selected"},
-  {"FlipClip", GDK_Return, 0x04, ID_FLIP_CLIP, "menu_flip_clip"},
-  {"MouseRotate", 'R', 0x00, ID_SELECT_MOUSEROTATE, "menu_select_mouserotate"},
-  {"Copy", 'C', 0x04, ID_EDIT_COPYBRUSH, "menu_edit_copybrush"},
-  {"Paste", 'V', 0x04, ID_EDIT_PASTEBRUSH, "menu_edit_pastebrush"},
-  {"PasteToCamera", 'V', RAD_ALT, ID_EDIT_PASTEBRUSHTOCAMERA, "menu_edit_pastebrushtocamera"},
-  {"Undo", 'Z', 0x04, ID_EDIT_UNDO, "menu_edit_undo"},
-  {"Redo", 'Y', 0x04, ID_EDIT_REDO, "menu_edit_redo"},
-  {"ZZoomOut", GDK_Insert, 0x04, ID_VIEW_ZZOOMOUT, "menu_view_zzoomout"},
-  {"ZZoomIn", GDK_Delete, 0x04, ID_VIEW_ZZOOMIN, "menu_view_zzoomin"},
-  {"TexRotateClock", GDK_Next, 0x01, ID_SELECTION_TEXTURE_ROTATECLOCK, "menu_selection_texture_rotateclock"},
-  {"TexRotateCounter", GDK_Prior, 0x01, ID_SELECTION_TEXTURE_ROTATECOUNTER, "menu_selection_texture_rotatecounter"},
-  {"TexRotateClock1deg", GDK_Next, 0x05, ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG, "menu_selection_texture_rotateclock_1deg"},
-  {"TexRotateCounter1deg", GDK_Prior, 0x05, ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG, "menu_selection_texture_rotatecounter_1deg"},
-  {"TexScaleUp", GDK_Up, 0x04, ID_SELECTION_TEXTURE_SCALEUP, "menu_selection_texture_scaleup"},
-  {"TexScaleDown", GDK_Down, 0x04, ID_SELECTION_TEXTURE_SCALEDOWN, "menu_selection_texture_scaledown"},
-  {"TexShiftLeft", GDK_Left, 0x01, ID_SELECTION_TEXTURE_SHIFTLEFT, "menu_selection_texture_shiftleft"},
-  {"TexShiftRight", GDK_Right, 0x01, ID_SELECTION_TEXTURE_SHIFTRIGHT, "menu_selection_texture_shiftright"},
-  {"TexShiftUp", GDK_Up, 0x01, ID_SELECTION_TEXTURE_SHIFTUP, "menu_selection_texture_shiftup"},
-  {"TexShiftDown", GDK_Down, 0x01, ID_SELECTION_TEXTURE_SHIFTDOWN, "menu_selection_texture_shiftdown"},
-  {"TexShiftLeft1gu", GDK_Left, 0x05, ID_SELECTION_TEXTURE_SHIFTLEFT_1GU, "menu_selection_texture_shiftleft_1gu"},
-  {"TexShiftRight1gu", GDK_Right, 0x05, ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU, "menu_selection_texture_shiftright_1gu"},
-  {"TexShiftUp1gu", GDK_Up, 0x05, ID_SELECTION_TEXTURE_SHIFTUP_1GU, "menu_selection_texture_shiftup_1gu"},
-  {"TexShiftDown1gu", GDK_Down, 0x05, ID_SELECTION_TEXTURE_SHIFTDOWN_1GU, "menu_selection_texture_shiftdown_1gu"},
-  {"GridDown", '[', 0x00, ID_GRID_PREV, "menu_grid_prev"},
-  {"GridUp", ']', 0x00, ID_GRID_NEXT, "menu_grid_next"},
-  {"TexScaleLeft", GDK_Left, 0x04, ID_SELECTION_TEXTURE_SCALELEFT, "menu_selection_texture_scaleleft"},
-  {"TexScaleRight", GDK_Right, 0x04, ID_SELECTION_TEXTURE_SCALERIGHT, "menu_selection_texture_scaleright"},
-  {"CubicClipZoomOut", ']', 0x04, ID_VIEW_CUBEOUT, "menu_view_cubeout"},
-  {"CubicClipZoomIn", '[', 0x04, ID_VIEW_CUBEIN, "menu_view_cubein"},
-  {"ToggleCubicClip", '\\', 0x04, ID_VIEW_CUBICCLIPPING, "menu_view_cubicclipping"},
-  {"MoveSelectionDOWN", GDK_KP_Subtract, 0x00, ID_SELECTION_MOVEDOWN, "menu_selection_movedown"},
-  {"MoveSelectionUP", GDK_KP_Add, 0x00, ID_SELECTION_MOVEUP, "menu_selection_moveup"},
-  {"DumpSelectedBrush", 'D', 0x01, ID_SELECTION_PRINT, "menu_selection_print"},
-  {"ToggleSizePaint", 'Q', 0x00, ID_SELECTION_TOGGLESIZEPAINT, "menu_selection_togglesizepaint"},
-  {"SelectNudgeLeft", GDK_Left, 0x02, ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},
-  {"SelectNudgeRight", GDK_Right, 0x02, ID_SELECTION_SELECT_NUDGERIGHT, "menu_selection_select_nudgeright"},
-  {"SelectNudgeUp", GDK_Up, 0x02, ID_SELECTION_SELECT_NUDGEUP, "menu_selection_select_nudgeup"},
-  {"CycleCapTexturePatch", 'N', 0x05, ID_CURVE_CYCLECAP, "menu_curve_cyclecap"},
-  {"NaturalizePatch", 'N', 0x04, ID_PATCH_NATURALIZE, "menu_patch_naturalize"},
-  {"SnapToGrid", 'G', 0x04, ID_SELECT_SNAPTOGRID, "menu_select_snaptogrid"},
-  {"ShowAllTextures", 'A', 0x04, ID_TEXTURES_SHOWALL, "menu_textures_showall"},
-  {"SelectAllOfType", 'A', 0x01, ID_SELECT_ALL, "menu_select_all"},
-  {"CapCurrentCurve", 'C', 0x01, ID_CURVE_CAP, "menu_curve_cap"},
-  {"MakeStructural", 'S', 0x05, ID_SELECTION_MAKE_STRUCTURAL, "menu_selection_make_structural"},
-  {"RegionSetSelection", 'R', 0x05, ID_REGION_SETSELECTION, "menu_region_setselection"},
-  {"ShowInUse", 'U', 0, ID_TEXTURES_SHOWINUSE, "menu_textures_showinuse"},
-  {"InvertSelection", 'I', 0, ID_SELECTION_INVERT, "menu_selection_invert"},
-  {"Sleep", 'P', 0x05, ID_FILE_SLEEP, "menu_file_sleep"},
-  {"SimplePatchMesh", 'P', 0x01, ID_CURVE_SIMPLEPATCHMESH, "menu_simplepatchmesh"},
-  {"FilterWorldBrushes", '1', RAD_ALT, ID_FILTER_WORLD, "menu_filter_world"},
-  {"FilterEntities", '2', RAD_ALT, ID_FILTER_ENTITIES, "menu_filter_entities"},
-  {"FilterAreaportals", '3', RAD_ALT, ID_FILTER_AREAPORTALS, "menu_filter_areaportals"},
-  {"FilterTranslucent", '4', RAD_ALT, ID_FILTER_TRANSLUCENT, "menu_filter_translucent"},
-  {"FilterLiquids", '5', RAD_ALT, ID_FILTER_LIQUIDS, "menu_filter_liquids"},
-  {"FilterCaulk", '6', RAD_ALT , ID_FILTER_CAULK, "menu_filter_caulk"},
-  {"FilterClips", '7', RAD_ALT, ID_FILTER_CLIPS, "menu_filter_clips"},
-  {"FilterBotClips", 'M', RAD_ALT, ID_FILTER_BOTCLIPS, "menu_filter_botclips"},
-  {"FilterPaths", '8', RAD_ALT, ID_FILTER_PATHS, "menu_filter_paths"},
-  {"FilterClusterportals", '9', RAD_ALT, ID_FILTER_CLUSTERPORTALS, "menu_filter_clusterportals"},
-  {"FilterLights", '0', RAD_ALT, ID_FILTER_LIGHTS, "menu_filter_lights"},
-  {"FilterPatches", 'P', RAD_CONTROL, ID_FILTER_PATCHES, "menu_filter_patches"},
-  {"FilterDetails", 'D', RAD_CONTROL, ID_FILTER_DETAILS, "menu_filter_details"},
-  {"FilterStructural", 'D', RAD_CONTROL|RAD_SHIFT, ID_FILTER_STRUCTURAL, "menu_filter_structural"},
-  {"FilterHintsSkips", 'H', RAD_CONTROL, ID_FILTER_HINTSSKIPS, "menu_filter_hintsskips"},
-  {"FilterModels", 'M', RAD_SHIFT, ID_FILTER_MODELS, "menu_filter_models"},
-  {"FilterTriggers", 'T', RAD_CONTROL|RAD_SHIFT, ID_FILTER_TRIGGERS, "menu_filter_triggers"},
-  {"LoadPointfile", 'L', RAD_SHIFT, ID_FILE_POINTFILE, "menu_load_pointfile"},
-  {"TextureWindowScaledown", GDK_Insert, RAD_ALT, ID_TEXTUREWINDOW_SCALEDOWN, "menu_texturewindow_scaledown"},
-  {"TextureWindowScaleup", GDK_Delete, RAD_ALT, ID_TEXTUREWINDOW_SCALEUP, "menu_texturewindow_scaleup"},
+// === File menu ===
+  {"FileNew",				0, 0,						ID_FILE_NEW, "menu_file_new"},							// New Map
+  {"Sleep",					'P', RAD_CONTROL|RAD_SHIFT,	ID_FILE_SLEEP, "menu_file_sleep"},
+  {"FileOpen",				'O', RAD_CONTROL,			ID_FILE_OPEN, "menu_file_open"},
+  {"FileImportMap",			0, 0,						ID_FILE_IMPORTMAP, "menu_file_importmap"},				// Import...
+  {"FileSave",				'S', RAD_CONTROL,			ID_FILE_SAVE, "menu_file_save"},
+  {"FileSaveAs",			0, 0,						ID_FILE_SAVEAS, "menu_file_saveas"},					// Save as...
+  {"FileExportMap",			0, 0,						ID_FILE_EXPORTMAP, "menu_file_exportmap"},				// Save Selected...
+  {"FileSaveRegion",		0, 0,						ID_FILE_SAVEREGION, "menu_file_saveregion"},			// Save Region...
+  {"FileNewProject",		0, 0,						ID_FILE_NEWPROJECT, "menu_file_newproject"},			// New Project...
+  {"FileLoadProject",		0, 0,						ID_FILE_LOADPROJECT, "menu_file_loadproject"},			// Load Project...
+  {"FileProjectSettings",	0, 0,						ID_FILE_PROJECTSETTINGS, "menu_file_projectsettings"},	// Project Settings...
+  {"LoadPointfile",			'L', RAD_SHIFT,				ID_FILE_POINTFILE, "menu_load_pointfile"},
+  // Recent Files (1-4)																							// ***Ignored for now.
+  // Check for GtkRadiant Update (Web)																			// ***Ignored - function unavailable.
+  {"Exit",					'Q', RAD_CONTROL,			ID_FILE_EXIT, "menu_file_exit"},
+
+
+// === Edit menu ===
+  {"Undo",			'Z', RAD_CONTROL,	ID_EDIT_UNDO, "menu_edit_undo"},
+  {"Redo",			'Y', RAD_CONTROL,	ID_EDIT_REDO, "menu_edit_redo"},
+  {"Copy",			'C', RAD_CONTROL,	ID_EDIT_COPYBRUSH, "menu_edit_copybrush"},
+  {"Paste",			'V', RAD_CONTROL,	ID_EDIT_PASTEBRUSH, "menu_edit_pastebrush"},
+  {"PasteToCamera",	'V', RAD_ALT,		ID_EDIT_PASTEBRUSHTOCAMERA, "menu_edit_pastebrushtocamera"},
+  {"Delete",		0, 0,				ID_SELECTION_DELETE, "menu_selection_delete"},	// Delete (command alias for DeleteSelection)
+  {"MapInfo",		'M', 0,				ID_EDIT_MAPINFO, "menu_edit_mapinfo"},
+  {"EntityList",	'L', 0,				ID_EDIT_ENTITYINFO, "menu_edit_entityinfo"},
+  // Brush Scripts...																	// ***Ignored - function not implemented.
+  {"LoadPrefab",	0, 0,				ID_EDIT_LOADPREFAB, "menu_edit_loadprefab"},	// Load Prefab...
+  {"SavePrefab",	0, 0,				ID_EDIT_SAVEPREFAB, "menu_edit_saveprefab"},	// Save Selection as Prefab...
+  {"Preferences",	'P', 0,				ID_PREFS, "menu_prefs"},
+
+
+// === View menu ===
+  // -- Toggle --
+  {"ToggleCamera",			'C', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLECAMERA, "menu_togglecamera"},
+  //  {"ViewConsole",		'O', 0,							ID_VIEW_CONSOLE, "menu_0,"},				// ***AEon: Deprecated?
+  {"ToggleConsole",			'O', 0,							ID_TOGGLECONSOLE, "menu_toggleconsole"},
+  {"ViewEntityInfo",		'N', 0,							ID_VIEW_ENTITY, "menu_view_entity"},
+  {"ToggleView",			'V', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLEVIEW, "menu_toggleview"},
+  {"ToggleViewYZ",			0, 0,							ID_TOGGLEVIEW_YZ, "menu_toggleview_yz"},	// YZ (Side)
+  {"ToggleViewXZ",			0, 0,							ID_TOGGLEVIEW_XZ, "menu_toggleview_xz"},	// XZ (Front)
+  {"ToggleZ",				'Z', RAD_CONTROL|RAD_SHIFT,		ID_TOGGLEZ, "menu_togglez"},
+
+  {"CenterView",			GDK_End, 0,						ID_VIEW_CENTER, "menu_view_center"},
+  {"CenterXYView",			GDK_Tab, RAD_CONTROL|RAD_SHIFT,	ID_VIEW_CENTERVIEW, "menu_view_centerview"},
+  {"UpFloor",				GDK_Prior, 0,					ID_VIEW_UPFLOOR, "menu_view_upfloor"},
+  {"DownFloor",				GDK_Next, 0,					ID_VIEW_DOWNFLOOR, "menu_view_downfloor"},
+  {"NextView",				GDK_Tab, RAD_CONTROL,			ID_VIEW_NEXTVIEW, "menu_view_nextview"},
+
+  // -- Layout --
+  {"ViewTopXY",				0, 0,							ID_VIEW_XY, "menu_view_xy"},				// XY (Top)
+  {"ViewSideYZ",			0, 0,							ID_VIEW_SIDE, "menu_view_side"},			// YZ (Side)
+  {"ViewFrontXZ",			0, 0,							ID_VIEW_FRONT, "menu_view_front"},			// XZ (Front)
+
+  // -- Zoom --
+  {"Zoom100",				0, 0,							ID_VIEW_100, "menu_view_100"},				// XY 100%
+  {"ZoomIn",				GDK_Delete, 0,					ID_VIEW_ZOOMIN, "menu_view_zoomin"},
+  {"ZoomOut",				GDK_Insert, 0,					ID_VIEW_ZOOMOUT, "menu_view_zoomout"},
+  {"ZZoom100",				0, 0,							ID_VIEW_Z100, "menu_view_z100"},			// Z 100%
+  {"ZZoomIn",				GDK_Delete, RAD_CONTROL,		ID_VIEW_ZZOOMIN, "menu_view_zzoomin"},
+  {"ZZoomOut",				GDK_Insert, RAD_CONTROL,		ID_VIEW_ZZOOMOUT, "menu_view_zzoomout"},
+  {"CubicClipZoomIn",		'[', RAD_CONTROL,				ID_VIEW_CUBEIN, "menu_view_cubein"},
+  {"CubicClipZoomOut",		']', RAD_CONTROL,				ID_VIEW_CUBEOUT, "menu_view_cubeout"},
+
+  // -- Show --
+  {"ShowAngles",			0, 0,							ID_VIEW_SHOWANGLES, "menu_view_showangles"},			// Show Angles
+  {"ShowNames",				0, 0,							ID_VIEW_SHOWNAMES, "menu_view_shownames"},				// Show Names
+  {"ShowBlocks",			0, 0,							ID_VIEW_SHOWBLOCKS, "menu_view_showblocks"},			// Show Blocks
+  {"ShowCoordinates",		0, 0,							ID_VIEW_SHOWCOORDINATES, "menu_view_showcoordinates"},	// Show Coordinates
+  {"ShowOutline",			0, 0,							ID_VIEW_SHOWOUTLINE, "menu_view_showoutline"},			// Show Window Output
+  {"SelectionNoOutline",	0, 0,							ID_SELECTION_NOOUTLINE, "menu_selection_nooutline"},	// Show Z-Buffered Outline
+  {"ShowAxes",				0, 0,							ID_VIEW_SHOWAXES, "menu_view_showaxes"},				// Show Axes
+  {"ShowWorkZone",			0, 0,							ID_VIEW_SHOWWORKZONE, "menu_view_showworkzone"},		// Show Workzone
+
+  // -- Filters --
+  {"FilterWorldBrushes",	'1', RAD_ALT,					ID_FILTER_WORLD, "menu_filter_world"},
+  {"FilterEntities",		'2', RAD_ALT,					ID_FILTER_ENTITIES, "menu_filter_entities"},
+  {"FilterAreaportals",		'3', RAD_ALT,					ID_FILTER_AREAPORTALS, "menu_filter_areaportals"},
+  {"FilterTranslucent",		'4', RAD_ALT,					ID_FILTER_TRANSLUCENT, "menu_filter_translucent"},
+  {"FilterLiquids",			'5', RAD_ALT,					ID_FILTER_LIQUIDS, "menu_filter_liquids"},
+  {"FilterCaulk",			'6', RAD_ALT ,					ID_FILTER_CAULK, "menu_filter_caulk"},
+  {"FilterClips",			'7', RAD_ALT,					ID_FILTER_CLIPS, "menu_filter_clips"},
+  {"FilterPaths",			'8', RAD_ALT,					ID_FILTER_PATHS, "menu_filter_paths"},
+  {"FilterClusterportals",	'9', RAD_ALT,					ID_FILTER_CLUSTERPORTALS, "menu_filter_clusterportals"},
+  {"FilterLights",			'0', RAD_ALT,					ID_FILTER_LIGHTS, "menu_filter_lights"},
+  {"FilterStructural",		'D', RAD_CONTROL|RAD_SHIFT,		ID_FILTER_STRUCTURAL, "menu_filter_structural"},
+  {"FilterLightgrid",		0, 0,							ID_FILTER_LIGHTGRID, "menu_filter_lightgrid"},	// Lightgrid
+  {"FilterPatches",			'P', RAD_CONTROL,				ID_FILTER_PATCHES, "menu_filter_patches"},
+  {"FilterDetails",			'D', RAD_CONTROL,				ID_FILTER_DETAILS, "menu_filter_details"},
+  {"FilterHintsSkips",		'H', RAD_CONTROL,				ID_FILTER_HINTSSKIPS, "menu_filter_hintsskips"},
+  {"FilterModels",			'M', RAD_SHIFT,					ID_FILTER_MODELS, "menu_filter_models"},
+  {"FilterTriggers",		'T', RAD_CONTROL|RAD_SHIFT,		ID_FILTER_TRIGGERS, "menu_filter_triggers"},
+  {"FilterBotClips",		'M', RAD_ALT,					ID_FILTER_BOTCLIPS, "menu_filter_botclips"},
+
+  // -- Hide/Show --
+  {"HideSelected",			'H', 0,							ID_VIEW_HIDESHOW_HIDESELECTED, "menu_view_hideshow_hideselected"},
+  {"ShowHidden",			'H', RAD_SHIFT,					ID_VIEW_HIDESHOW_SHOWHIDDEN, "menu_view_hideshow_showhidden"},
+
+  // -- Entities as --
+  {"EntitiesAsBoundingBox",			0, 0,					ID_VIEW_ENTITIESAS_BOUNDINGBOX, "menu_view_entitiesas_boundingbox"},			// Bounding Box
+  {"EntitiesAsWireframe",			0, 0,					ID_VIEW_ENTITIESAS_WIREFRAME, "menu_view_entitiesas_wireframe"},				// Wireframe
+  {"EntitiesAsSelectedWireframe",	0, 0,					ID_VIEW_ENTITIESAS_SELECTEDWIREFRAME, "menu_view_entitiesas_selectedwireframe"},// Selected Wireframe
+  {"EntitiesAsSelectedSkinned",		0, 0,					ID_VIEW_ENTITIESAS_SELECTEDSKINNED, "menu_view_entitiesas_selectedskinned"},	// Selected Skinned
+  {"EntitiesAsSkinned",				0, 0,					ID_VIEW_ENTITIESAS_SKINNED, "menu_view_entitiesas_skinned"},					// Skinned
+  {"EntitiesAsSkinnedAndBoxed",		0, 0,					ID_VIEW_ENTITIESAS_SKINNEDANDBOXED, "menu_view_entitiesas_skinnedandboxed"},	// Skinned and Boxed
+
+  {"ToggleCubicClip",		'\\', RAD_CONTROL,				ID_VIEW_CUBICCLIPPING, "menu_view_cubicclipping"},
+  {"OpenGLLighting",		0, 0,							ID_VIEW_OPENGLLIGHTING, "menu_view_opengllighting"},							// OpenGL Lighting
+
+
+// === Selection menu ===
+  // -- Drag --
+  {"DragEdges",			'E', 0,						ID_SELECTION_DRAGEDGES, "menu_selection_dragedges"},
+  {"DragVertices",		'V', 0,						ID_SELECTION_DRAGVERTECIES, "menu_selection_dragvertecies"},
+
+  {"CloneSelection",	GDK_space, 0,				ID_SELECTION_CLONE, "menu_selection_clone"},
+  {"UnSelectSelection",	GDK_Escape, 0,				ID_SELECTION_DESELECT, "menu_selection_deselect"},
+  {"InvertSelection",	'I', 0,						ID_SELECTION_INVERT, "menu_selection_invert"},
+  {"DeleteSelection",	GDK_BackSpace, 0,			ID_SELECTION_DELETE, "menu_selection_delete"},
+
+  // -- Flip --
+  {"FlipX",				0, 0,						ID_BRUSH_FLIPX, "menu_brush_flipx"},		// Flip X
+  {"FlipY",				0, 0,						ID_BRUSH_FLIPY, "menu_brush_flipy"},		// Flip Y
+  {"FlipZ",				0, 0,						ID_BRUSH_FLIPZ, "menu_brush_flipz"},		// Flip Z
+
+  // -- Rotate --
+  {"RotateX",			0, 0,						ID_BRUSH_ROTATEX, "menu_brush_rotatex"},	// Rotate X (later use also for models?)
+  {"RotateY",			0, 0,						ID_BRUSH_ROTATEY, "menu_brush_rotatey"},	// Rotate Y
+  {"RotateZ",			0, 0,						ID_BRUSH_ROTATEZ, "menu_brush_rotatez"},	// Rotate Z
+  {"ArbitraryRotation",	0, 0,						ID_SELECTION_ARBITRARYROTATION, "menu_selection_arbitraryrotation"},	// Arbitrary Rotation...
+
+  {"Scale",				0, 0,						ID_SELECT_SCALE, "menu_select_scale"},									// Scale...
+
+  // -- CGS --
+  {"MakeHollow",		0, 0,						ID_SELECTION_MAKEHOLLOW, "menu_selection_makehollow"},					// Make Hollow
+  {"CSGSubtract",		'U', RAD_SHIFT,				ID_SELECTION_CSGSUBTRACT, "menu_selection_csgsubstract"},
+  {"CSGMerge",			'U', RAD_CONTROL,			ID_SELECTION_CSGMERGE, "menu_selection_csgmerge"},
+
+  // -- Select --
+  {"SelectCompleteTall",0, 0,						ID_SELECTION_SELECTCOMPLETETALL, "menu_selection_selectcompletetall"},	// Select Complete Tall
+  {"SelectTouching",	0, 0,						ID_SELECTION_SELECTTOUCHING, "menu_selection_selecttouching"},			// Select Touching
+  {"SelectPartialTall",	0, 0,						ID_SELECTION_SELECTPARTIALTALL, "menu_selection_selectpartialtall"},	// Select Partial Tall
+  {"SelectInside",		0, 0,						ID_SELECTION_SELECTINSIDE, "menu_selection_selectinside"},				// Select Inside
+  //  {"ViewGroups",	'G', 0,						ID_VIEW_GROUPS, "menu_view_groups"}, 									// (temporary disabled)
+  {"SelectFuncGroup",	'G', 0,						ID_SELECT_FUNC_GROUP, "menu_select_func_group"},
+  {"SelectNudgeLeft",	GDK_Left, RAD_ALT,			ID_SELECTION_SELECT_NUDGELEFT, "menu_selection_select_nudgeleft"},
+  {"SelectNudgeRight",	GDK_Right, RAD_ALT,			ID_SELECTION_SELECT_NUDGERIGHT, "menu_selection_select_nudgeright"},
+  {"SelectNudgeUp",		GDK_Up, RAD_ALT,			ID_SELECTION_SELECT_NUDGEUP, "menu_selection_select_nudgeup"},
+  {"SelectNudgeDown",	GDK_Down, RAD_ALT,			ID_SELECTION_SELECT_NUDGEDOWN, "menu_selection_select_nudgedown"},
+
+  // -- Clipper --
+  {"ToggleClipper",		'X', 0,						ID_VIEW_CLIPPER, "menu_view_clipper"},
+  {"ClipSelected",		GDK_Return, 0,				ID_CLIP_SELECTED, "menu_clip_selected"},
+  {"SplitSelected",		GDK_Return, RAD_SHIFT,		ID_SPLIT_SELECTED, "menu_split_selected"},
+  {"FlipClip",			GDK_Return, RAD_CONTROL,	ID_FLIP_CLIP, "menu_flip_clip"},
+
+  {"ConnectSelection",	'K', RAD_CONTROL,			ID_SELECTION_CONNECT, "menu_selection_connect"},
+  {"UngroupEntity",		0, 0,						ID_SELECTION_UNGROUPENTITY, "menu_selection_ungroupentity"},			// Ungroup Entity
+  {"MakeDetail",		'M', RAD_CONTROL,			ID_SELECTION_MAKE_DETAIL, "menu_selection_make_detail"},
+  {"MakeStructural",	'S', RAD_CONTROL|RAD_SHIFT,	ID_SELECTION_MAKE_STRUCTURAL, "menu_selection_make_structural"},
+
+
+// === Grid menu ===
+  {"SetGrid025",		0, 0,			ID_GRID_025, "menu_grid_025"},		// Grid 0.25u
+  {"SetGrid05",			0, 0,			ID_GRID_05, "menu_grid_05"},		// Grid 0.5u
+  {"SetGrid1",			'1', 0,			ID_GRID_1, "menu_grid_1"},
+  {"SetGrid2",			'2', 0,			ID_GRID_2, "menu_grid_2"},
+  {"SetGrid4",			'3', 0,			ID_GRID_4, "menu_grid_4"},
+  {"SetGrid8",			'4', 0,			ID_GRID_8, "menu_grid_8"},
+  {"SetGrid16",			'5', 0,			ID_GRID_16, "menu_grid_16"},
+  {"SetGrid32",			'6', 0,			ID_GRID_32, "menu_grid_32"},
+  {"SetGrid64",			'7', 0,			ID_GRID_64, "menu_grid_64"},
+  {"SetGrid128",		'8', 0,			ID_GRID_128, "menu_grid_128"},
+  {"SetGrid256",		'9', 0,			ID_GRID_256, "menu_grid_256"},
+  {"ToggleSnapToGrid",	0, 0,			ID_SNAPTOGRID, "menu_snaptogrid"},	// Snap to Grid (global setting)
+
+
+// === Textures menu ===
+  {"ShowInUse",					'U', 0,				ID_TEXTURES_SHOWINUSE, "menu_textures_showinuse"},
+  {"ShowAllTextures",			'A', RAD_CONTROL,	ID_TEXTURES_SHOWALL, "menu_textures_showall"},
+  {"ShowShaders",				0, 0,				ID_TEXTURES_SHADERS_SHOW, "menu_textures_shaders_show"},	// Show Shaders
+  {"ReloadShaders",				0, 0,				ID_TEXTURES_RELOADSHADERS, "menu_textures_reloadshaders"},	// Flush & Reload Shaders
+  {"TexturesLoad",				0, 0,				ID_TEXTURES_LOAD, "menu_textures_load"},					// Load Directory...
+  {"TexturesLoadList",			0, 0,				ID_TEXTURES_LOADLIST, "menu_textures_loadlist"},			// Directory List...
+  {"SurfaceInspector",			'S', 0,				ID_TEXTURES_INSPECTOR, "menu_textures_inspector"},
+
+  // -- Render Quality --
+  {"RenderQWireframe",			0, 0,				ID_TEXTURES_WIREFRAME, "menu_textures_wireframe"},		// Wireframe
+  {"RenderQFlatShade",			0, 0,				ID_TEXTURES_FLATSHADE, "menu_textures_flatshade"},		// Flat Shade
+  {"RenderQNearest",			0, 0,				ID_VIEW_NEAREST, "menu_view_nearest"},					// Nearest
+  {"RenderQNearestMipmap",		0, 0,				ID_VIEW_NEARESTMIPMAP, "menu_view_nearestmipmap"},		// Nearest Mipmap
+  {"RenderQLinear",				0, 0,				ID_VIEW_LINEAR, "menu_view_linear"},					// Linear
+  {"RenderQBilinear",			0, 0,				ID_VIEW_BILINEAR, "menu_view_bilinear"},				// Bilinear
+  {"RenderQBilinearMipmap",		0, 0,				ID_VIEW_BILINEARMIPMAP, "menu_view_bilinearmipmap"},	// Bilinear Mipmap
+  {"RenderQTrilinear",			0, 0,				ID_VIEW_TRILINEAR, "menu_view_trilinear"},				// Trilinear
+
+  {"TextureReplaceAll",			'F', RAD_CONTROL,	ID_TEXTURE_REPLACEALL, "menu_texture_replaceall"},		// Find / Replace...
+
+  // -- Texture Lock --
+  {"TogTexLock",				'T', RAD_SHIFT,		ID_TOGGLE_LOCK, "menu_toggle_lock"},
+  {"TogTexRotLock",				'R', RAD_SHIFT,		ID_TOGGLE_ROTATELOCK, "menu_toggle_rotatelock"},
+
+  // -- Texture Window Scale --
+  {"TextureWindowScale200",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_200, "menu_textures_texturewindowscale_200"},	// 200%
+  {"TextureWindowScale100",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_100, "menu_textures_texturewindowscale_100"},	// 100%
+  {"TextureWindowScale50",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_50, "menu_textures_texturewindowscale_50"},		// 50%
+  {"TextureWindowScale25",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_25, "menu_textures_texturewindowscale_25"},		// 25%
+  {"TextureWindowScale10",		0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_10, "menu_textures_texturewindowscale_10"},		// 10%
+  {"TextureWindowScaleFixed",	0, 0,				ID_TEXTURES_TEXTUREWINDOWSCALE_FIXED, "menu_textures_texturewindowscale_fixed"},// Fixed Size
+
+  {"TexturesShaderlistOnly",	0, 0,				ID_TEXTURES_SHADERLISTONLY, "menu_textures_shaderlistonly"},	// shaderlist.txt only
+
+
+// === Misc menu ===
+  {"Benchmark",				0, 0,						ID_MISC_BENCHMARK, "menu_misc_benchmark"},			// Benchmark
+
+  // -- Colors --
+  // - Themes -
+  {"ThemeOriginalQE4",		0, 0,						ID_COLOR_SETORIGINAL, "menu_color_setoriginal"},	// 	QE4 Original
+  {"ThemeQ3Radiant",		0, 0,						ID_COLOR_SETQER, "menu_color_setqer"},				// 	Q3Radiant Original
+  {"ThemeBlackAndGreen",	0, 0,						ID_COLOR_SETBLACK, "menu_color_setblack"},			// 	Black and Green
+  {"ThemeMayaMaxLightwave",	0, 0,						ID_COLOR_SETYDNAR, "menu_color_setydnar"},			// 	Maya/Max/Lightwave Emulation
+  // Texture Background...			// ***AEon: These are too irrelevant to map to keys, IMO.
+  // Grid Background...
+  // Grid Major...
+  // Grid Minor...
+  // Grid Major Small..
+  // Grid Minor Small..
+  // Grid Text...
+  // Grid Block...
+  // Default Brush...
+  // Camera Background...
+  // Selected Brush...
+  // Selected Brush (Camera)...
+  // Clipper...
+  // Active View name...
+
+  {"SetGamma",				0, 0,						ID_MISC_GAMMA, "menu_misc_gamma"},						// Gamma...
+  {"FindBrush",				'F', RAD_CONTROL|RAD_SHIFT,	ID_MISC_FINDBRUSH, "menu_misc_findbrush"},				// Find Brush...
+  {"NextLeakSpot",			'L', RAD_CONTROL|RAD_SHIFT,	ID_MISC_NEXTLEAKSPOT, "menu_misc_nextleakspot"},
+  {"PrevLeakSpot",			'K', RAD_CONTROL|RAD_SHIFT,	ID_MISC_PREVIOUSLEAKSPOT, "menu_misc_previousleakspot"},
+  {"PrintXYView",			0, 0,						ID_MISC_PRINTXY, "menu_misc_printxy"},					// Print XY View (Screen Grab)
+  {"EntityColor",			'K', 0,						ID_MISC_SELECTENTITYCOLOR, "menu_misc_select_entitycolor"},
+
+
+// === Region menu ===
+  {"RegionOff",				0, 0,						ID_REGION_OFF, "menu_region_off"},						// Off
+  {"RegionSetXY",			0, 0,						ID_REGION_SETXY, "menu_region_setxy"},					// Set XY
+  {"RegionSetTallBrush",	0, 0,						ID_REGION_SETTALLBRUSH, "menu_region_settallbrush"},	// Set Tall Brush
+  {"RegionSetBrush",		0, 0,						ID_REGION_SETBRUSH, "menu_region_setbrush"},			// Set Brush
+  {"RegionSetSelection",	'R', RAD_CONTROL|RAD_SHIFT,	ID_REGION_SETSELECTION, "menu_region_setselection"},
+
+
+// === Brush menu ===
+  {"Brush3Sided",			'3', RAD_CONTROL,	ID_BRUSH_3SIDED, "menu_brush_3sided"},
+  {"Brush4Sided",			'4', RAD_CONTROL,	ID_BRUSH_4SIDED, "menu_brush_4sided"},
+  {"Brush5Sided",			'5', RAD_CONTROL,	ID_BRUSH_5SIDED, "menu_brush_5sided"},
+  {"Brush6Sided",			'6', RAD_CONTROL,	ID_BRUSH_6SIDED, "menu_brush_6sided"},
+  {"Brush7Sided",			'7', RAD_CONTROL,	ID_BRUSH_7SIDED, "menu_brush_7sided"},
+  {"Brush8Sided",			'8', RAD_CONTROL,	ID_BRUSH_8SIDED, "menu_brush_8sided"},
+  {"Brush9Sided",			'9', RAD_CONTROL,	ID_BRUSH_9SIDED, "menu_brush_9sided"},
+  {"BrushArbitrarySided",	'1', RAD_CONTROL,	ID_BRUSH_ARBITRARYSIDED, "menu_region_off"},					// Arbitrary Sided...
+
+  // -- Primitives --
+  {"BrushMakeCone",			0, 0,				ID_BRUSH_MAKECONE, "menu_brush_makecone"},						// Cone...
+  {"BrushPrimitivesSphere",	0, 0,				ID_BRUSH_PRIMITIVES_SPHERE, "menu_brush_primitives_sphere"},	// Sphere...
+
+
+// === Curve menu ===
+  {"PatchTube",					0, 0,						ID_CURVE_PATCHTUBE, "menu_curve_patchtube"},					// Cylinder
+
+  // -- More Cylinders --
+  {"PatchDenseTube",			0, 0,						ID_CURVE_PATCHDENSETUBE, "menu_curve_patchdensetube"},			// Dense Cylinder
+  {"PatchVeryDensetube",		0, 0,						ID_CURVE_PATCHVERYDENSETUBE, "menu_curve_patchverydensetube"},	// Very Dense Cylinder
+  {"PatchSquareTube",			0, 0,						ID_CURVE_PATCHSQUARE, "menu_curve_patchsquare"},				// Square Cylinder
+
+  {"PatchEndCap",				0, 0,						ID_CURVE_PATCHENDCAP, "menu_curve_patchendcap"},				// End Cap
+  {"PatchBevel",				0, 0,						ID_CURVE_PATCHBEVEL, "menu_curve_patchbevel"},					// Bevel
+
+  // -- More End Caps, Bevels --
+  {"PatchSquareEndCap",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP, "menu_curve_moreendcapsbevels_squareendcap"},	// Square End Cap
+  {"PatchSquareBevel",			0, 0,						ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL, "menu_curve_moreendcapsbevels_squarebevel"},	// Square Bevel
+
+  {"PatchCone",					0, 0,						ID_CURVE_PATCHCONE, "menu_curve_patchcone"},					// Cone
+  //*Sphere													// *** Ghosted probably never worked - remove in menu?
+  {"SimplePatchMesh",			'P', RAD_SHIFT,				ID_CURVE_SIMPLEPATCHMESH, "menu_simplepatchmesh"},
+
+  // -- Insert --
+  {"PatchInsert2Columns",		0, 0,						ID_CURVE_INSERT_INSERTCOLUMN, "menu_curve_insert_insertcolumn"},// Insert (2) Columns
+  {"PatchAdd2Columns",			0, 0,						ID_CURVE_INSERT_ADDCOLUMN, "menu_curve_insert_addcolumn"},		// Add (2) Columns
+  {"PatchInsert2Rows",			0, 0,						ID_CURVE_INSERT_INSERTROW, "menu_curve_insert_insertrow"},		// Insert (2) Rows
+  {"PatchAdd2Rows",				0, 0,						ID_CURVE_INSERT_ADDROW, "menu_curve_insert_addrow"},			// Add (2) Rows
+
+  // -- Delete --
+  {"PatchDeleteFirst2Columns",	0, 0,						ID_CURVE_DELETE_FIRSTCOLUMN, "menu_curve_delete_firstcolumn"},	// First (2) Columns
+  {"PatchDeleteLast2Columns",	0, 0,						ID_CURVE_DELETE_LASTCOLUMN, "menu_curve_delete_lastcolumn"},	// Last (2) Columns
+  {"PatchDeleteFirst2Rows",		0, 0,						ID_CURVE_DELETE_FIRSTROW, "menu_curve_delete_firstrow"},		// First (2) Rows
+  {"PatchDeleteLast2Rows",		0, 0,						ID_CURVE_DELETE_LASTROW, "menu_curve_delete_lastrow"},			// Last (2) Rows
+
+  // -- Matrix --
+  {"InvertCurve",				'I', RAD_CONTROL,			ID_CURVE_NEGATIVE, "menu_curve_negative"},
+  // - Re-disperse -
+  {"RedisperseRows",			'E', RAD_CONTROL,			ID_CURVE_REDISPERSE_ROWS, "menu_curve_redisperse_rows"},
+  {"RedisperseIntermediateCols",'E', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_REDISPERSE_INTERMEDIATE_COLS, "menu_curve_redisperse_cols"},
+  {"RedisperseIntermediateRows",0, 0,						ID_CURVE_REDISPERSE_INTERMEDIATE_ROWS, "menu_curve_redisperse_rows"},	//	Rows (Intermediate)
+  {"MatrixTranspose",			'M', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_MATRIX_TRANSPOSE, "menu_curve_matrix_transpose"},
+
+  {"CapCurrentCurve",			'C', RAD_SHIFT,				ID_CURVE_CAP, "menu_curve_cap"},
+  {"CycleCapTexturePatch",		'N', RAD_CONTROL|RAD_SHIFT,	ID_CURVE_CYCLECAP, "menu_curve_cyclecap"},
+
+  // -- Overlay --
+  {"MakeOverlayPatch",			'Y', 0,						ID_CURVE_OVERLAY_SET, "menu_curve_overlay_set"},
+  {"ClearPatchOverlays",		'L', RAD_CONTROL,			ID_CURVE_OVERLAY_CLEAR, "menu_curve_overlay_clear"},
+
+  {"ThickenPatch",				'T', RAD_CONTROL,			ID_CURVE_THICKEN, "menu_curve_thicken"},
+
+
+// === Plugins menu === 		// ***Skipped for now.
+
+
+// === Help menu ===			// ***Skipping most entries for now.
+  // Manual		F1				// ***Shortcut F1 "hacked" into menu code. Does not work.
+
+  // -- General --
+  // ...
+
+  // -- Quake III Arena and mods --
+  // TA Teams Manual
+  // Team Arena Mapping
+
+  {"HelpBugReport",			0, 0,		ID_HELP_BUGREPORT, "menu_help_bugreport"},		// Bug Report ***Link Broken
+  {"HelpCommandList",		GDK_F2, 0,	ID_HELP_COMMANDLIST, "menu_help_commandlist"},	// Shortcuts List
+  {"HelpAbout",				0, 0,		ID_HELP_ABOUT, "menu_help_about"},				// About
+
+
+// === HIDDEN menu ===			// ***AEon: TODO... migrate these into menus, to let folks look them up.
+  {"DecPatchColumn",			GDK_KP_Subtract, RAD_CONTROL|RAD_SHIFT,	ID_CURVE_DELETECOLUMN, "menu_curve_deletecolumn"},
+  {"DecPatchRow",				GDK_KP_Subtract, RAD_CONTROL,			ID_CURVE_DELETEROW, "menu_curve_deleterow"},
+  {"IncPatchColumn",			GDK_KP_Add, RAD_CONTROL|RAD_SHIFT,		ID_CURVE_INSERTCOLUMN, "menu_curve_insertcolumn"},
+  {"IncPatchRow",				GDK_KP_Add, RAD_CONTROL,				ID_CURVE_INSERTROW, "menu_curve_insertrow"},
+  {"InvertCurveTextureY",		'I', RAD_SHIFT,							ID_CURVE_NEGATIVETEXTUREX, "menu_curve_negativetexturex"},
+  {"InvertCurveTextureX",		'I', RAD_CONTROL|RAD_SHIFT,				ID_CURVE_NEGATIVETEXTUREY, "menu_curve_negativetexturey"},
+
+  {"MoveSelectionUP",			GDK_KP_Add, 0,							ID_SELECTION_MOVEUP, "menu_selection_moveup"},
+  {"MoveSelectionDOWN",			GDK_KP_Subtract, 0,						ID_SELECTION_MOVEDOWN, "menu_selection_movedown"},
+  {"CycleOutlineStyle",			'J', 0,									ID_SELECTION_OUTLINESTYLE, "menu_selection_outlinestyle"},	// in Camera View
+  {"ToggleSizePaint",			'Q', 0,									ID_SELECTION_TOGGLESIZEPAINT, "menu_selection_togglesizepaint"},
+  {"DumpSelectedBrush",			'D', RAD_SHIFT,							ID_SELECTION_PRINT, "menu_selection_print"},				// ***AEon: Function?
+
+  {"TexRotateClock",			GDK_Next, RAD_SHIFT,					ID_SELECTION_TEXTURE_ROTATECLOCK, "menu_selection_texture_rotateclock"},
+  {"TexRotateClock1deg",		GDK_Next, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG, "menu_selection_texture_rotateclock_1deg"},
+  {"TexRotateCounter",			GDK_Prior, RAD_SHIFT,					ID_SELECTION_TEXTURE_ROTATECOUNTER, "menu_selection_texture_rotatecounter"},
+  {"TexRotateCounter1deg",		GDK_Prior, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG, "menu_selection_texture_rotatecounter_1deg"},
+
+  {"TexScaleUp",				GDK_Up, RAD_CONTROL,					ID_SELECTION_TEXTURE_SCALEUP, "menu_selection_texture_scaleup"},
+  {"TexScaleDown",				GDK_Down, RAD_CONTROL,					ID_SELECTION_TEXTURE_SCALEDOWN, "menu_selection_texture_scaledown"},
+  {"TexScaleLeft",				GDK_Left, RAD_CONTROL,					ID_SELECTION_TEXTURE_SCALELEFT, "menu_selection_texture_scaleleft"},
+  {"TexScaleRight",				GDK_Right, RAD_CONTROL,					ID_SELECTION_TEXTURE_SCALERIGHT, "menu_selection_texture_scaleright"},
+
+  {"TexShiftUp",				GDK_Up, RAD_SHIFT,						ID_SELECTION_TEXTURE_SHIFTUP, "menu_selection_texture_shiftup"},
+  {"TexShiftUp1gu",				GDK_Up, RAD_CONTROL|RAD_SHIFT,			ID_SELECTION_TEXTURE_SHIFTUP_1GU, "menu_selection_texture_shiftup_1gu"},
+  {"TexShiftDown",				GDK_Down, RAD_SHIFT,					ID_SELECTION_TEXTURE_SHIFTDOWN, "menu_selection_texture_shiftdown"},
+  {"TexShiftDown1gu",			GDK_Down, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_SHIFTDOWN_1GU, "menu_selection_texture_shiftdown_1gu"},
+  {"TexShiftLeft",				GDK_Left, RAD_SHIFT,					ID_SELECTION_TEXTURE_SHIFTLEFT, "menu_selection_texture_shiftleft"},
+  {"TexShiftLeft1gu",			GDK_Left, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_SHIFTLEFT_1GU, "menu_selection_texture_shiftleft_1gu"},
+  {"TexShiftRight",				GDK_Right, RAD_SHIFT,					ID_SELECTION_TEXTURE_SHIFTRIGHT, "menu_selection_texture_shiftright"},
+  {"TexShiftRight1gu",			GDK_Right, RAD_CONTROL|RAD_SHIFT,		ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU, "menu_selection_texture_shiftright_1gu"},
+
+  {"TextureWindowScaledown",	GDK_Insert, RAD_ALT,					ID_TEXTUREWINDOW_SCALEDOWN, "menu_texturewindow_scaledown"}, // Does not work *in* Textures window, use outside.
+  {"TextureWindowScaleup",		GDK_Delete, RAD_ALT,					ID_TEXTUREWINDOW_SCALEUP, "menu_texturewindow_scaleup"},
+
+  {"ToggleRealtime",			'R', RAD_CONTROL,						ID_VIEW_CAMERAUPDATE, "menu_view_cameraupdate"},
+  {"ToggleCrosshairs",			'X', RAD_SHIFT,							ID_VIEW_CROSSHAIR, "menu_view_crosshair"},
+  {"ViewTextures",				'T', 0,									ID_VIEW_TEXTURE, "menu_view_texture"},
+
+  {"CameraAngleUp",				'A', 0,									ID_CAMERA_ANGLEUP, "menu_camera_angleup"},
+  {"CameraAngleDown",			'Z', 0,									ID_CAMERA_ANGLEDOWN, "menu_camera_angledown"},
+  {"CameraUp",					'D', 0,									ID_CAMERA_UP, "menu_camera_up"},
+  {"CameraDown",				'C', 0,									ID_CAMERA_DOWN, "menu_camera_down"},
+
+  {"CameraForward",				GDK_Up, 0,								ID_CAMERA_FORWARD, "menu_camera_forward"},
+  {"CameraBack",				GDK_Down, 0,							ID_CAMERA_BACK, "menu_camera_back"},
+  {"CameraLeft",				GDK_Left, 0,							ID_CAMERA_LEFT, "menu_camera_left"},
+  {"CameraRight",				GDK_Right, 0,							ID_CAMERA_RIGHT, "menu_camera_right"},
+  {"CameraStrafeLeft",			GDK_comma, 0,							ID_CAMERA_STRAFELEFT, "menu_camera_strafeleft"},
+  {"CameraStrafeRight",			GDK_period, 0,							ID_CAMERA_STRAFERIGHT, "menu_camera_straferight"},
+
+  {"GridUp",					']', 0,									ID_GRID_NEXT, "menu_grid_next"},	// [ ] not accessible on German keyboard!
+  {"GridDown",					'[', 0,									ID_GRID_PREV, "menu_grid_prev"},
+  {"ToggleGrid",				'0', 0,									ID_GRID_TOGGLE, "menu_grid_toggle"},
+
+  {"SetGrid1Alt",				GDK_KP_1, 0,							ID_GRID_1, "menu_grid_1"},			// Alternate command aliases,
+  {"SetGrid2Alt",				GDK_KP_2, 0,							ID_GRID_2, "menu_grid_2"},			// allowing external rebind!
+  {"SetGrid4Alt",				GDK_KP_3, 0,							ID_GRID_4, "menu_grid_4"},
+  {"SetGrid8Alt",				GDK_KP_4, 0,							ID_GRID_8, "menu_grid_8"},
+  {"SetGrid16Alt",				GDK_KP_5, 0,							ID_GRID_16, "menu_grid_16"},
+  {"SetGrid32Alt",				GDK_KP_6, 0,							ID_GRID_32, "menu_grid_32"},
+  {"SetGrid64Alt",				GDK_KP_7, 0,							ID_GRID_64, "menu_grid_64"},
+  {"SetGrid128Alt",				GDK_KP_8, 0,							ID_GRID_128, "menu_grid_128"},
+  {"SetGrid256Alt",				GDK_KP_9, 0,							ID_GRID_256, "menu_grid_256"},
+  {"ToggleGridAlt",				GDK_KP_0, 0,							ID_GRID_TOGGLE, "menu_grid_toggle"},
+
+  {"BendMode",					'B', 0,									ID_PATCH_BEND, "menu_patch_bend"},
+  {"PatchInspector",			'S', RAD_SHIFT,							ID_PATCH_INSPECTOR, "menu_patch_inspector"},
+  {"NaturalizePatch",			'N', RAD_CONTROL,						ID_PATCH_NATURALIZE, "menu_patch_naturalize"},
+  {"Patch TAB",					GDK_Tab, 0,								ID_PATCH_TAB, "menu_patch_tab"},	// AEon: "Patch Tab" bound twice?
+  {"Patch TAB",					GDK_Tab, RAD_SHIFT,						ID_PATCH_TAB, "menu_patch_tab"},
+
+  {"SelectAllOfType",			'A', RAD_SHIFT,							ID_SELECT_ALL, "menu_select_all"},
+  {"MouseRotate",				'R', 0,									ID_SELECT_MOUSEROTATE, "menu_select_mouserotate"},	// This is a mode, like E, V!
+  {"SnapToGrid",				'G', RAD_CONTROL,						ID_SELECT_SNAPTOGRID, "menu_select_snaptogrid"},
+  {"FitTexture",				'B', RAD_SHIFT,							IDC_BTN_FACEFIT, "menu_idc_btn_facefit"},	// ***Should not open Surface Inspector, IMO.
 };
 
 int g_nCommandCount = sizeof(g_Commands) / sizeof(SCommandInfo);
@@ -583,7 +828,7 @@ gint HandleCommand (GtkWidget *widget, gpointer data)
     case ID_CURVE_PATCHENDCAP: g_pParentWnd->OnCurvePatchendcap (); break;
     case ID_CURVE_PATCHBEVEL: g_pParentWnd->OnCurvePatchbevel (); break;
     case ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL: g_pParentWnd->OnCurveMoreendcapsbevelsSquarebevel (); break;
-    case ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP: g_pParentWnd->OnCurveMoreendcapsbevelsSquareendcap();break;
+    case ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP: g_pParentWnd->OnCurveMoreendcapsbevelsSquareendcap (); break;
     case ID_CURVE_PATCHCONE: g_pParentWnd->OnCurvePatchcone (); break;
     case ID_CURVE_SIMPLEPATCHMESH: g_pParentWnd->OnCurveSimplepatchmesh (); break;
     case ID_CURVE_INSERT_INSERTCOLUMN: g_pParentWnd->OnCurveInsertInsertcolumn (); break;
@@ -965,7 +1210,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_NEW);
   menu_separator (menu);
 
-  //++timo temporary experimental stuff for sleep mode..
+  //++timo temporary experimental stuff for sleep mode... AEon: 1/16/2010 broken on "awaken".
   item = create_menu_item_with_mnemonic (menu, _("_Sleep"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_SLEEP);
   g_object_set_data (G_OBJECT (window), "menu_file_sleep", item );
@@ -982,18 +1227,18 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   g_object_set_data (G_OBJECT (window), "menu_file_save", item);
   create_menu_item_with_mnemonic (menu, _("Save _as..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_SAVEAS);
-  create_menu_item_with_mnemonic (menu, _("Save s_elected..."),
+  create_menu_item_with_mnemonic (menu, _("Save S_elected..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_EXPORTMAP);
   menu_separator (menu);
-  item = create_menu_item_with_mnemonic (menu, _("Save re_gion..."),
+  item = create_menu_item_with_mnemonic (menu, _("Save Re_gion..."),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_SAVEREGION);
   g_object_set_data (G_OBJECT (window), "menu_file_saveregion", item);
   menu_separator (menu);
-  create_menu_item_with_mnemonic (menu, _("New p_roject..."),
+  create_menu_item_with_mnemonic (menu, _("New P_roject..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_NEWPROJECT);
-  create_menu_item_with_mnemonic (menu, _("Load _project..."),
+  create_menu_item_with_mnemonic (menu, _("Load _Project..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_LOADPROJECT);
-  create_menu_item_with_mnemonic (menu, _("Pro_ject settings..."),
+  create_menu_item_with_mnemonic (menu, _("Pro_ject Settings..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_PROJECTSETTINGS);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("_Pointfile..."),
@@ -1017,7 +1262,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   gtk_widget_hide (item);
   MRU_AddWidget (item, 3);
   menu_separator (menu);
-  item = create_menu_item_with_mnemonic (menu, _("Check for GtkRadiant update (web)"),
+  item = create_menu_item_with_mnemonic (menu, _("Check for GtkRadiant Update (Web)"),
     GTK_SIGNAL_FUNC (HandleCommand), ID_FILE_CHECKUPDATE);
   // disable, the functionality is no longer available
   gtk_widget_set_sensitive( item, FALSE );
@@ -1036,15 +1281,16 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                            GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_REDO);
   g_object_set_data (G_OBJECT (window), "menu_edit_redo", item);
   menu_separator (menu);
-  item = create_menu_item_with_mnemonic (menu, _("_Copy"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_COPYBRUSH);
+  item = create_menu_item_with_mnemonic (menu, _("_Copy"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_COPYBRUSH);		// AEon: "item =" x3 is redundant?
   item = create_menu_item_with_mnemonic (menu, _("_Paste"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_PASTEBRUSH);
-  item = create_menu_item_with_mnemonic (menu, _("P_aste To Camera"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_PASTEBRUSHTOCAMERA);
+  item = create_menu_item_with_mnemonic (menu, _("P_aste to Camera"), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_PASTEBRUSHTOCAMERA);
   item = create_menu_item_with_mnemonic (menu, _("_Delete"), GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_DELETE);
   g_object_set_data (G_OBJECT (window), "menu_selection_delete", item);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Map Info..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_MAPINFO);
   create_menu_item_with_mnemonic (menu, _("Entity Info..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_ENTITYINFO);
   menu_separator (menu);
+  // AEon: Brush Scripts is not implemented, should be ghosted or commented out!
   create_menu_item_with_mnemonic (menu, _("Brush Scripts..."), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_SCRIPTS);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Load Pre_fab..."), GTK_SIGNAL_FUNC (HandleCommand), ID_EDIT_LOADPREFAB);
@@ -1071,32 +1317,32 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu_in_menu, _("Z View"), GTK_SIGNAL_FUNC (HandleCommand), ID_TOGGLEZ);
   menu_separator (menu);
   item = create_menu_item_with_mnemonic (menu, _("_Center"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CENTER);
-  item = create_menu_item_with_mnemonic (menu, _("_Center 2d"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CENTERVIEW);
+  item = create_menu_item_with_mnemonic (menu, _("_Center 2D"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CENTERVIEW);
   item = create_menu_item_with_mnemonic (menu, _("_Up Floor"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_UPFLOOR);
   item = create_menu_item_with_mnemonic (menu, _("_Down Floor"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_DOWNFLOOR);
   menu_separator (menu);
-  item = create_menu_item_with_mnemonic (menu, _("_Next (XY, YZ, XY)"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_NEXTVIEW);
+  item = create_menu_item_with_mnemonic (menu, _("_Next (XY, YZ, XZ)"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_NEXTVIEW);
   menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("Layout"));
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu_in_menu);
   create_menu_item_with_mnemonic (menu_in_menu, _("XY (Top)"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_XY);
-  create_menu_item_with_mnemonic (menu_in_menu, _("YZ"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_SIDE);
-  create_menu_item_with_mnemonic (menu_in_menu, _("XZ"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_FRONT);
+  create_menu_item_with_mnemonic (menu_in_menu, _("YZ (Side)"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_SIDE);
+  create_menu_item_with_mnemonic (menu_in_menu, _("XZ (Front)"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_FRONT);
   menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("Zoom"));
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu_in_menu);
   create_menu_item_with_mnemonic (menu_in_menu, _("_XY 100%"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_100);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("XY Zoom _In"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZOOMIN);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("XY Zoom _Out"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZOOMOUT);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("XY Zoom _in"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZOOMIN);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("XY Zoom _out"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZOOMOUT);
   menu_separator (menu_in_menu);
   create_menu_item_with_mnemonic (menu_in_menu, _("_Z 100%"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_Z100);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("Z Zoo_m In"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZZOOMIN);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("Z Zoo_m in"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZZOOMIN);
   g_object_set_data (G_OBJECT (window), "menu_view_zzoomin", item);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("Z Zoom O_ut"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZZOOMOUT);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("Z Zoom o_ut"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ZZOOMOUT);
   g_object_set_data (G_OBJECT (window), "menu_view_zzoomout", item);
   menu_separator (menu_in_menu);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("Cubic Clip Zoom In"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CUBEIN);
-  item = create_menu_item_with_mnemonic (menu_in_menu, _("Cubic Clip Zoom Out"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CUBEOUT);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("Cubic Clip Zoom in"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CUBEIN);
+  item = create_menu_item_with_mnemonic (menu_in_menu, _("Cubic Clip Zoom out"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CUBEOUT);
   menu_separator (menu);
 
   menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("Show"));
@@ -1112,7 +1358,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   g_object_set_data (G_OBJECT (window), "menu_view_showcoordinates", item);
   item = create_check_menu_item_with_mnemonic (menu_in_menu, _("Show Window Outline"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_SHOWOUTLINE, TRUE);
   g_object_set_data (G_OBJECT (window), "menu_view_showoutline", item);
-  item = create_check_menu_item_with_mnemonic (menu_in_menu, _("Show ZBuffered Outline"), GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_NOOUTLINE, TRUE);
+  item = create_check_menu_item_with_mnemonic (menu_in_menu, _("Show Z-Buffered Outline"), GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_NOOUTLINE, TRUE);
   g_object_set_data (G_OBJECT (window), "menu_selection_nooutline", item);
   item = create_check_menu_item_with_mnemonic (menu_in_menu, _("Show Axes"), GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_SHOWAXES, TRUE);
   g_object_set_data (G_OBJECT (window), "menu_view_showaxes", item);
@@ -1124,13 +1370,13 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
     menu_tearoff (menu_in_menu);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("World"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_WORLD, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Entities"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_ENTITIES, FALSE);
-  create_check_menu_item_with_mnemonic (menu_in_menu, _("Areaportals"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_AREAPORTALS, FALSE);
+  create_check_menu_item_with_mnemonic (menu_in_menu, _("Area Portals"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_AREAPORTALS, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Translucent"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_TRANSLUCENT, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Liquids"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_LIQUIDS, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Caulk"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_CAULK, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Clips"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_CLIPS, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Paths"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_PATHS, FALSE);
-  create_check_menu_item_with_mnemonic (menu_in_menu, _("Clusterportals"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_CLUSTERPORTALS, FALSE);
+  create_check_menu_item_with_mnemonic (menu_in_menu, _("Cluster Portals"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_CLUSTERPORTALS, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Lights"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_LIGHTS, FALSE);
   create_check_menu_item_with_mnemonic (menu_in_menu, _("Structural"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_STRUCTURAL, FALSE);
   item = create_check_menu_item_with_mnemonic (menu_in_menu, _("Lightgrid"), GTK_SIGNAL_FUNC (HandleCommand), ID_FILTER_LIGHTGRID, FALSE);
@@ -1155,7 +1401,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu_in_menu);
   g_object_set_data (G_OBJECT (window), "view_entitiesas_menu", menu_in_menu);
-  item = create_radio_menu_item_with_mnemonic (menu_in_menu, NULL, _("Bounding box"),
+  item = create_radio_menu_item_with_mnemonic (menu_in_menu, NULL, _("Bounding Box"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_ENTITIESAS_BOUNDINGBOX,FALSE);
   g_object_set_data (G_OBJECT (window), "menu_view_entitiesas_boundingbox", item);
   item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("Wireframe"),
@@ -1225,7 +1471,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                     GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_ROTATEY);
   create_menu_item_with_mnemonic (menu_in_menu, _("Rotate Z"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_ROTATEZ);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Arbitrary rotation..."),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Arbitrary Rotation..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_ARBITRARYROTATION);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Scale..."), GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SCALE);
@@ -1268,20 +1514,20 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu_in_menu, _("Toggle Clipper"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CLIPPER);
   menu_separator (menu_in_menu);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Clip selection"),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Clip Selection"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_CLIP_SELECTED);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Split selection"),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Split Selection"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SPLIT_SELECTED);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Flip Clip orientation"),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Flip Clip Orientation"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_FLIP_CLIP);
   menu_separator (menu);
-  create_menu_item_with_mnemonic (menu, _("Connect entities"),
+  create_menu_item_with_mnemonic (menu, _("Connect Entities"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_CONNECT);
-  create_menu_item_with_mnemonic (menu, _("Ungroup entity"),
+  create_menu_item_with_mnemonic (menu, _("Ungroup Entity"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_UNGROUPENTITY);
-  create_menu_item_with_mnemonic (menu, _("Make detail"),
+  create_menu_item_with_mnemonic (menu, _("Make Detail"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MAKE_DETAIL);
-  create_menu_item_with_mnemonic (menu, _("Make structural"),
+  create_menu_item_with_mnemonic (menu, _("Make Structural"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MAKE_STRUCTURAL);
 
   // BSP menu
@@ -1295,41 +1541,41 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu);
 
-  item = create_radio_menu_item_with_mnemonic (menu, NULL, _("Grid0.25"),
+  item = create_radio_menu_item_with_mnemonic (menu, NULL, _("Grid 0.25u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_025, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_025", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid0.5"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 0.5u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_05, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_05", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid1"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 1u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_1, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_1", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid2"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 2u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_2, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_2", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid4"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 4u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_4, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_4", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid8"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 8u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_8, TRUE);
   g_object_set_data (G_OBJECT (window), "menu_grid_8", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid16"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 16u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_16, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_16", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid32"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 32u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_32, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_32", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid64"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 64u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_64, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_64", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid128"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 128u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_128, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_128", item);
-  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid256"),
+  item = create_radio_menu_item_with_mnemonic (menu, item, _("Grid 256u"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_256, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_grid_256", item);
   menu_separator (menu);
-  item = create_check_menu_item_with_mnemonic (menu, _("Snap to grid"),
+  item = create_check_menu_item_with_mnemonic (menu, _("Snap to Grid"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_SNAPTOGRID, TRUE);
   g_object_set_data (G_OBJECT (window), "menu_snaptogrid", item);
 
@@ -1338,23 +1584,23 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu);
 
-  item = create_check_menu_item_with_mnemonic (menu, _("Show In _Use"),
+  item = create_check_menu_item_with_mnemonic (menu, _("Show in _Use"),
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_SHOWINUSE, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_showinuse", item);
   item = create_check_menu_item_with_mnemonic (menu, _("Show _All"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_SHOWALL, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_showall", item);
   menu_separator (menu);
-  item = create_check_menu_item_with_mnemonic (menu, _("Show shaders"),
+  item = create_check_menu_item_with_mnemonic (menu, _("Show Shaders"),
                                  GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_SHADERS_SHOW, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_shaders_show", item);
   item = create_menu_item_with_mnemonic (menu, _("Flush & Reload Shaders"),
 			   GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_RELOADSHADERS);
   g_object_set_data (G_OBJECT (window), "menu_textures_reloadshaders", item);
-  item = create_menu_item_with_mnemonic (menu, _("Load directory..."),
+  item = create_menu_item_with_mnemonic (menu, _("Load Directory..."),
 			   GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_LOAD);
   g_object_set_data (G_OBJECT (window), "menu_textures_load", item);
-  item = create_menu_item_with_mnemonic (menu, _("Directory list..."),
+  item = create_menu_item_with_mnemonic (menu, _("Directory List..."),
 			   GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_LOADLIST);
   menu_separator (menu);
 
@@ -1368,7 +1614,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   item = create_radio_menu_item_with_mnemonic (menu_in_menu, NULL, _("_Wireframe"),
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_WIREFRAME, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_wireframe", item);
-  item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("_Flat shade"),
+  item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("_Flat Shade"),
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_FLATSHADE, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_flatshade", item);
   item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("_Nearest"),
@@ -1420,11 +1666,11 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_TEXTUREWINDOWSCALE_10, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_texturewindowscale_10", item);
   menu_separator (menu_in_menu);
-  item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("Fixed size"),
+  item = create_radio_menu_item_with_mnemonic (menu_in_menu, item, _("Fixed Size"),
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_TEXTUREWINDOWSCALE_FIXED, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_texturewindowscale_fixed", item);
   item = menu_separator (menu);
-  item = create_check_menu_item_with_mnemonic (menu, _("shaderlist.txt only"),
+  item = create_check_menu_item_with_mnemonic (menu, _("shaderlist.txt Only"),
 				 GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTURES_SHADERLISTONLY, FALSE);
   g_object_set_data (G_OBJECT (window), "menu_textures_shaderlistonly", item);
   item = menu_separator (menu);
@@ -1475,17 +1721,18 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
                     GTK_SIGNAL_FUNC (HandleCommand), ID_COLORS_SELECTEDBRUSH3D);
   create_menu_item_with_mnemonic (menu_in_menu, _("Clipper..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_COLORS_CLIPPER);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Active View name..."),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Active View Name..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_COLORS_VIEWNAME);
 
   create_menu_item_with_mnemonic (menu, _("_Gamma..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_GAMMA);
-  create_menu_item_with_mnemonic (menu, _("Find brush..."),
+  create_menu_item_with_mnemonic (menu, _("Find Brush..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_FINDBRUSH);
-  item = create_menu_item_with_mnemonic (menu, _("Next leak spot"),
+  item = create_menu_item_with_mnemonic (menu, _("Next Leak Spot"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_NEXTLEAKSPOT);
-  item = create_menu_item_with_mnemonic (menu, _("Previous leak spot"),
+  item = create_menu_item_with_mnemonic (menu, _("Previous Leak Spot"),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PREVIOUSLEAKSPOT);
+  // ***AEon: Print XY View saves BMP of that view... image broken!
   create_menu_item_with_mnemonic (menu, _("_Print XY View"), GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_PRINTXY);
   item = create_menu_item_with_mnemonic (menu, _("_Select Entity Color..."),
                            GTK_SIGNAL_FUNC (HandleCommand), ID_MISC_SELECTENTITYCOLOR);
@@ -1512,15 +1759,15 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu);
 
-  item = create_menu_item_with_mnemonic (menu, _("3 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_3SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("4 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_4SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("5 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_5SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("6 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_6SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("7 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_7SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("8 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_8SIDED);
-  item = create_menu_item_with_mnemonic (menu, _("9 sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_9SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("3 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_3SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("4 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_4SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("5 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_5SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("6 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_6SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("7 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_7SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("8 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_8SIDED);
+  item = create_menu_item_with_mnemonic (menu, _("9 Sided"), GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_9SIDED);
   menu_separator (menu);
-  create_menu_item_with_mnemonic (menu, _("Arbitrary sided..."),
+  create_menu_item_with_mnemonic (menu, _("Arbitrary Sided..."),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_BRUSH_ARBITRARYSIDED);
   menu_separator (menu);
   menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("Primitives"));
@@ -1549,15 +1796,15 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   create_menu_item_with_mnemonic (menu_in_menu, _("Square Cylinder"),
 		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHSQUARE);
   menu_separator (menu);
-  create_menu_item_with_mnemonic (menu, _("End cap"), GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHENDCAP);
+  create_menu_item_with_mnemonic (menu, _("End Cap"), GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHENDCAP);
   create_menu_item_with_mnemonic (menu, _("Bevel"), GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHBEVEL);
-  menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("More End caps, Bevels"));
+  menu_in_menu = create_menu_in_menu_with_mnemonic (menu, _("More End Caps, Bevels"));
   if (g_PrefsDlg.m_bDetachableMenus)
     menu_tearoff (menu_in_menu);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Square Endcap"),
-		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL);
-  create_menu_item_with_mnemonic (menu_in_menu, _("Square Bevel"),
+  create_menu_item_with_mnemonic (menu_in_menu, _("Square End Cap"),
 		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREENDCAP);
+  create_menu_item_with_mnemonic (menu_in_menu, _("Square Bevel"),
+		    GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_MOREENDCAPSBEVELS_SQUAREBEVEL);
   menu_separator (menu);
   create_menu_item_with_mnemonic (menu, _("Cone"), GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_PATCHCONE);
   item = create_menu_item_with_mnemonic (menu, _("Sphere"),
@@ -1630,7 +1877,7 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   /*
   create_menu_item_with_mnemonic (menu, "Refresh", GTK_SIGNAL_FUNC (HandleCommand), ID_PLUGINS_REFRESH);
   */
-  // NOTE: the seperator is used when doing a refresh of the list, everything past the seperator is removed
+  // NOTE: the separator is used when doing a refresh of the list, everything past the separator is removed
   item = menu_separator (menu);
   g_object_set_data (G_OBJECT (window), "menu_plugin_separator", item);
   g_object_set_data (G_OBJECT (window), "menu_plugin", menu);
@@ -1651,9 +1898,9 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
   // TTimo: this is in global.xlink now
   //create_menu_item_with_mnemonic (menu, "Links",
   //                  GTK_SIGNAL_FUNC (HandleCommand), ID_HELP_LINKS);
-  create_menu_item_with_mnemonic (menu, _("Bug report"),
+  create_menu_item_with_mnemonic (menu, _("Bug Report"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_HELP_BUGREPORT);
-  create_menu_item_with_mnemonic (menu, _("Shortcuts list"),
+  create_menu_item_with_mnemonic (menu, _("Shortcuts List"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_HELP_COMMANDLIST);
   create_menu_item_with_mnemonic (menu, _("_About"),
                     GTK_SIGNAL_FUNC (HandleCommand), ID_HELP_ABOUT);
@@ -1669,64 +1916,94 @@ void MainFrame::create_main_menu (GtkWidget *window, GtkWidget *vbox)
 
   gtk_widget_hide (gtk_menu_get_attach_widget (GTK_MENU (menu)));
 
-  create_menu_item_with_mnemonic (menu, "BendMode", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
-  create_menu_item_with_mnemonic (menu, "FitTexture", GTK_SIGNAL_FUNC (HandleCommand), IDC_BTN_FACEFIT);
-  create_menu_item_with_mnemonic (menu, "ViewTextures", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_TEXTURE);
-  create_menu_item_with_mnemonic (menu, "PatchInspector", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
-  create_menu_item_with_mnemonic (menu, "InvertCurveTextureX", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREY);
-  create_menu_item_with_mnemonic (menu, "InvertCurveTextureY", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREX);
-  create_menu_item_with_mnemonic (menu, "IncPatchColumn", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTCOLUMN);
-  create_menu_item_with_mnemonic (menu, "IncPatchRow", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTROW);
-  create_menu_item_with_mnemonic (menu, "DecPatchColumn", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETECOLUMN);
-  create_menu_item_with_mnemonic (menu, "DecPatchRow", GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETEROW);
-  create_menu_item_with_mnemonic (menu, "Patch TAB", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
-  create_menu_item_with_mnemonic (menu, "Patch TAB", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEDOWN);
-  create_menu_item_with_mnemonic (menu, "CameraForward", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_FORWARD);
-  create_menu_item_with_mnemonic (menu, "CameraBack", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_BACK);
-  create_menu_item_with_mnemonic (menu, "CameraLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_LEFT);
-  create_menu_item_with_mnemonic (menu, "CameraRight", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_RIGHT);
-  create_menu_item_with_mnemonic (menu, "CameraUp", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_UP);
-  create_menu_item_with_mnemonic (menu, "CameraDown", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_DOWN);
-  create_menu_item_with_mnemonic (menu, "CameraAngleUp", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEUP);
-  create_menu_item_with_mnemonic (menu, "CameraAngleDown", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEDOWN);
-  create_menu_item_with_mnemonic (menu, "CameraStrafeRight", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFERIGHT);
-  create_menu_item_with_mnemonic (menu, "CameraStrafeLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFELEFT);
-  create_menu_item_with_mnemonic (menu, "ToggleGrid", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
-  create_menu_item_with_mnemonic (menu, "ToggleCrosshairs", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CROSSHAIR);
-  create_menu_item_with_mnemonic (menu, "ToggleRealtime", GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CAMERAUPDATE);
-  create_menu_item_with_mnemonic (menu, "MouseRotate", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_MOUSEROTATE);
-  create_menu_item_with_mnemonic (menu, "TexRotateClock", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK);
-  create_menu_item_with_mnemonic (menu, "TexRotateCounter", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER);
-  create_menu_item_with_mnemonic (menu, "TexRotateClock1deg", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG);
-  create_menu_item_with_mnemonic (menu, "TexRotateCounter1deg", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG);
-  create_menu_item_with_mnemonic (menu, "TexScaleUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEUP);
-  create_menu_item_with_mnemonic (menu, "TexScaleDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEDOWN);
-  create_menu_item_with_mnemonic (menu, "TexShiftLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT);
-  create_menu_item_with_mnemonic (menu, "TexShiftRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT);
-  create_menu_item_with_mnemonic (menu, "TexShiftUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP);
-  create_menu_item_with_mnemonic (menu, "TexShiftDown", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN);
-  create_menu_item_with_mnemonic (menu, "TexShiftLeft1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftRight1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftUp1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP_1GU);
-  create_menu_item_with_mnemonic (menu, "TexShiftDown1gu", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN_1GU);
-  create_menu_item_with_mnemonic (menu, "GridDown", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_PREV);
-  create_menu_item_with_mnemonic (menu, "GridUp", GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_NEXT);
-  create_menu_item_with_mnemonic (menu, "TexScaleLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALELEFT);
-  create_menu_item_with_mnemonic (menu, "TexScaleRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALERIGHT);
-  create_menu_item_with_mnemonic (menu, "MoveSelectionDOWN", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEDOWN);
-  create_menu_item_with_mnemonic (menu, "MoveSelectionUP", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEUP);
-  create_menu_item_with_mnemonic (menu, "DumpSelectedBrush", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_PRINT);
-  create_menu_item_with_mnemonic (menu, "ToggleSizePaint", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TOGGLESIZEPAINT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeLeft", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGELEFT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeRight", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGERIGHT);
-  create_menu_item_with_mnemonic (menu, "SelectNudgeUp", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEUP);
-  create_menu_item_with_mnemonic (menu, "NaturalizePatch", GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_NATURALIZE);
-  create_menu_item_with_mnemonic (menu, "SnapPatchToGrid", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SNAPTOGRID);
-  create_menu_item_with_mnemonic (menu, "SelectAllOfType", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_ALL);
-  create_menu_item_with_mnemonic (menu, "CycleOutlineStyle", GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_OUTLINESTYLE);
-  create_menu_item_with_mnemonic (menu, "TextureWindowScaleup", GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEUP);
-  create_menu_item_with_mnemonic (menu, "TextureWindowScaledown", GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "DecPatchColumn",		GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETECOLUMN);
+  create_menu_item_with_mnemonic (menu, "DecPatchRow",			GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_DELETEROW);
+  create_menu_item_with_mnemonic (menu, "IncPatchColumn",		GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTCOLUMN);
+  create_menu_item_with_mnemonic (menu, "IncPatchRow",			GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_INSERTROW);
+  create_menu_item_with_mnemonic (menu, "InvertCurveTextureX",	GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREY);
+  create_menu_item_with_mnemonic (menu, "InvertCurveTextureY",	GTK_SIGNAL_FUNC (HandleCommand), ID_CURVE_NEGATIVETEXTUREX);
+
+  create_menu_item_with_mnemonic (menu, "MoveSelectionUP",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEUP);
+  create_menu_item_with_mnemonic (menu, "MoveSelectionDOWN",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_MOVEDOWN);
+  create_menu_item_with_mnemonic (menu, "CycleOutlineStyle",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_OUTLINESTYLE);
+  create_menu_item_with_mnemonic (menu, "ToggleSizePaint",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TOGGLESIZEPAINT);
+  create_menu_item_with_mnemonic (menu, "DumpSelectedBrush",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_PRINT);
+
+  create_menu_item_with_mnemonic (menu, "TexRotateClock",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK);
+  create_menu_item_with_mnemonic (menu, "TexRotateCounter",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER);
+  create_menu_item_with_mnemonic (menu, "TexRotateClock1deg",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECLOCK_1DEG);
+  create_menu_item_with_mnemonic (menu, "TexRotateCounter1deg",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_ROTATECOUNTER_1DEG);
+
+  create_menu_item_with_mnemonic (menu, "TexScaleUp",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEUP);
+  create_menu_item_with_mnemonic (menu, "TexScaleDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "TexScaleLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALELEFT);
+  create_menu_item_with_mnemonic (menu, "TexScaleRight",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SCALERIGHT);
+
+  create_menu_item_with_mnemonic (menu, "TexShiftUp",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP);
+  create_menu_item_with_mnemonic (menu, "TexShiftUp1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTUP_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN);
+  create_menu_item_with_mnemonic (menu, "TexShiftDown1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTDOWN_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT);
+  create_menu_item_with_mnemonic (menu, "TexShiftLeft1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTLEFT_1GU);
+  create_menu_item_with_mnemonic (menu, "TexShiftRight",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT);
+  create_menu_item_with_mnemonic (menu, "TexShiftRight1gu",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_TEXTURE_SHIFTRIGHT_1GU);
+
+  create_menu_item_with_mnemonic (menu, "TextureWindowScaledown",GTK_SIGNAL_FUNC(HandleCommand), ID_TEXTUREWINDOW_SCALEDOWN);
+  create_menu_item_with_mnemonic (menu, "TextureWindowScaleup",	GTK_SIGNAL_FUNC (HandleCommand), ID_TEXTUREWINDOW_SCALEUP);
+
+  create_menu_item_with_mnemonic (menu, "ToggleRealtime",		GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CAMERAUPDATE);
+  create_menu_item_with_mnemonic (menu, "ToggleCrosshairs",		GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_CROSSHAIR);
+  create_menu_item_with_mnemonic (menu, "ViewTextures",			GTK_SIGNAL_FUNC (HandleCommand), ID_VIEW_TEXTURE);
+
+  create_menu_item_with_mnemonic (menu, "CameraAngleUp",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEUP);
+  create_menu_item_with_mnemonic (menu, "CameraAngleDown",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_ANGLEDOWN);
+  create_menu_item_with_mnemonic (menu, "CameraUp",				GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_UP);
+  create_menu_item_with_mnemonic (menu, "CameraDown",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_DOWN);
+
+  create_menu_item_with_mnemonic (menu, "CameraForward",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_FORWARD);
+  create_menu_item_with_mnemonic (menu, "CameraBack",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_BACK);
+  create_menu_item_with_mnemonic (menu, "CameraLeft",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_LEFT);
+  create_menu_item_with_mnemonic (menu, "CameraRight",			GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_RIGHT);
+  create_menu_item_with_mnemonic (menu, "CameraStrafeRight",	GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFERIGHT);
+  create_menu_item_with_mnemonic (menu, "CameraStrafeLeft",		GTK_SIGNAL_FUNC (HandleCommand), ID_CAMERA_STRAFELEFT);
+
+  create_menu_item_with_mnemonic (menu, "GridUp",				GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_NEXT);
+  create_menu_item_with_mnemonic (menu, "GridDown",				GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_PREV);
+  create_menu_item_with_mnemonic (menu, "ToggleGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
+
+/*
+  // AEon: These entries should be required to make the accellerators KP1-KP0 work, but they break the 
+  //       1-0 shortcut names showing in the Grid menu. Commenting this out fixes this, and KP1-KP0 still work.
+  //       Existing menu call using "ID_GRID_1" (SetGrid1) may make alias command (SetGrid1Alt) call also using
+  //       "ID_GRID_1" redundant in the Hidden menu.
+  create_menu_item_with_mnemonic (menu, "SetGrid1Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_1);	// Alternate command aliases,
+  create_menu_item_with_mnemonic (menu, "SetGrid2Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_2);	// allowing external rebind!
+  create_menu_item_with_mnemonic (menu, "SetGrid4Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_4);
+  create_menu_item_with_mnemonic (menu, "SetGrid8Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_8);
+  create_menu_item_with_mnemonic (menu, "SetGrid16Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_16);
+  create_menu_item_with_mnemonic (menu, "SetGrid32Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_32);
+  create_menu_item_with_mnemonic (menu, "SetGrid64Alt",			GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_64);
+  create_menu_item_with_mnemonic (menu, "SetGrid128Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_128);
+  create_menu_item_with_mnemonic (menu, "SetGrid256Alt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_256);
+  create_menu_item_with_mnemonic (menu, "ToggleGridAlt",		GTK_SIGNAL_FUNC (HandleCommand), ID_GRID_TOGGLE);
+*/
+
+  create_menu_item_with_mnemonic (menu, "BendMode",				GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_BEND);
+  create_menu_item_with_mnemonic (menu, "PatchInspector",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_INSPECTOR);
+  create_menu_item_with_mnemonic (menu, "NaturalizePatch",		GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_NATURALIZE);
+  create_menu_item_with_mnemonic (menu, "Patch TAB",			GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);
+  create_menu_item_with_mnemonic (menu, "Patch TAB",			GTK_SIGNAL_FUNC (HandleCommand), ID_PATCH_TAB);			// AEon: Comment out duplicate call?
+
+  create_menu_item_with_mnemonic (menu, "SelectAllOfType",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_ALL);
+  create_menu_item_with_mnemonic (menu, "MouseRotate",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_MOUSEROTATE);
+  create_menu_item_with_mnemonic (menu, "SnapToGrid",			GTK_SIGNAL_FUNC (HandleCommand), ID_SELECT_SNAPTOGRID); // Was SnapPatchToGrid, should be SnapToGrid
+  create_menu_item_with_mnemonic (menu, "FitTexture",			GTK_SIGNAL_FUNC (HandleCommand), IDC_BTN_FACEFIT);
+
+// AEon: Redundant entries in Hidden menu, since they are in Selection menu, Select (though those can be ifndef QUAKE3 conditional)!
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeUp",		GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEUP);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeDown",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGEDOWN);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeLeft",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGELEFT);
+//  create_menu_item_with_mnemonic (menu, "SelectNudgeRight",	GTK_SIGNAL_FUNC (HandleCommand), ID_SELECTION_SELECT_NUDGERIGHT);
 
   g_bIgnoreCommands--;
 }
@@ -3512,6 +3789,7 @@ void MainFrame::OnDestroy ()
 }
 
 // TTimo: now using profile.cpp code
+// AEon: TODO - allow the same command to be mapped to different keys (see Patch TAB) via shortcuts.ini.
 void MainFrame::LoadCommandMap()
 {
   FILE *f;
@@ -3608,6 +3886,8 @@ void MainFrame::LoadCommandMap()
             continue;
           if (g_Commands[i].m_nKey == g_Commands[j].m_nKey && g_Commands[i].m_nModifiers == g_Commands[j].m_nModifiers)
           {
+            // help debugging keys
+            Sys_Printf("  Shortcut %s overrides an existing default binding!\n", value);
             // found!
             g_Commands[j].m_nKey = 0;
             // verbose
@@ -3619,8 +3899,8 @@ void MainFrame::LoadCommandMap()
       }
     }
     if (iOverrideCount)
-      Sys_Printf("User's command list overrides %d default commands\n", iOverrideCount);
-    Sys_Printf("Parsed %d custom shortcuts\n", iCount );
+      Sys_Printf("  User's command list overrides %d default commands.\n", iOverrideCount);
+    Sys_Printf("  Parsed %d custom shortcuts\n", iCount );
   }
   else
     Sys_Printf("Looked for a '%s' keyboard shortcuts file, not found\n", strINI.GetBuffer());
@@ -6603,7 +6883,7 @@ void MainFrame::OnCurveMoreendcapsbevelsSquarebevel()
   Undo_Start("square bevel");
   Undo_AddBrushList(&selected_brushes);
 
-  Patch_BrushToMesh(false, true, false, true);
+  Patch_BrushToMesh(false, false, true, true);
   Sys_UpdateWindows (W_ALL);
 
   Undo_EndBrushList(&selected_brushes);
@@ -6615,7 +6895,7 @@ void MainFrame::OnCurveMoreendcapsbevelsSquareendcap()
   Undo_Start("square endcap");
   Undo_AddBrushList(&selected_brushes);
 
-  Patch_BrushToMesh(false, false, true, true);
+  Patch_BrushToMesh(false, true, false, true);
   Sys_UpdateWindows (W_ALL);
 
   Undo_EndBrushList(&selected_brushes);
@@ -7221,10 +7501,10 @@ void MainFrame::OnPatchTab()
   }
 }
 
-void MainFrame::OnSelectFuncGroup() 
+void MainFrame::OnSelectFuncGroup()
 {
 	// check to see if the selected brush is part of a func group
-	// if it is, deselect everything and reselect the next brush 
+	// if it is, deselect everything and reselect the next brush
 	// in the group
 	brush_t *b = selected_brushes.next;
 	entity_t * e;
@@ -7238,7 +7518,7 @@ void MainFrame::OnSelectFuncGroup()
 	}
 }
 
-void MainFrame::OnCameraForward(bool keydown) 
+void MainFrame::OnCameraForward(bool keydown)
 {
   if (g_PrefsDlg.m_bCamDiscrete && (m_pCamWnd && !m_pCamWnd->m_bFreeMove) )
   {

@@ -26,10 +26,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define Q3R_CMD_SPLITTER "-"
 #define Q3R_CMD_ABOUT "About Portal Viewer"
-#define Q3R_CMD_LOAD "Load .prt file"
-#define Q3R_CMD_RELEASE "Unload .prt file"
-#define Q3R_CMD_SHOW_3D "Toggle portals (3D)"
-#define Q3R_CMD_SHOW_2D "Toggle portals (2D)"
+#define Q3R_CMD_LOAD "Load .prt File"
+#define Q3R_CMD_RELEASE "Unload .prt File"
+#define Q3R_CMD_SHOW_3D "Toggle Portals (3D)"
+#define Q3R_CMD_SHOW_2D "Toggle Portals (2D)"
 #define Q3R_CMD_OPTIONS "Configure Portal Viewer"
 
 static char INIfn[NAME_MAX];

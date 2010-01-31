@@ -1391,8 +1391,8 @@ GtkWidget* create_main_dialog ()
   const char *games[] = { "Quake 2", "Half-Life", "SiN", "Heretic 2", "Kingpin", "Genesis3D", "Quake 3 Arena" };
   const char *waveforms[] = { "Alternating hill/valley", "Cylindrical left-to-right", "Cylindrical top-to-bottom",
                         "From bitmap", "Fractal" };
-  const char *orientations[] = { "Ground surface", "Ceiling", "Wall facing 0", "Wall facing 90",
-                           "Wall facing 180","Wall facing 270" };
+  const char *orientations[] = { "Ground Surface", "Ceiling", "Wall Facing 0", "Wall Facing 90",
+                           "Wall Facing 180","Wall Facing 270" };
 
   g_pWnd = dlg = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (dlg), gszCaption);
