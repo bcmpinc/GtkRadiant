@@ -386,6 +386,8 @@ qtexture_t *QERApp_LoadTextureRGBA(unsigned char* pPixels, int nWidth, int nHeig
 
   qglBindTexture( GL_TEXTURE_2D, q->texture_number );
 
+  Sys_Printf("Sending texture to OpenGL. size=%dx%d id=%d\n", nWidth, nHeight, q->texture_number );
+
   SetTexParameters();
 
   width2 = 1; while (width2 < nWidth) width2 <<= 1;
