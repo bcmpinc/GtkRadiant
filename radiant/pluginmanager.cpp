@@ -640,6 +640,7 @@ void CPlugInManager::InitForDir(const Str &dir)
   path += g_strPluginsDir;
   // SYNAPSE
   g_pParentWnd->GetSynapseServer().AddSearchPath(path);
+  Sys_Printf("Added %s to plugin path (1)\n", path.GetBuffer());
 
   if (strcmp(g_strPluginsDir.GetBuffer(), g_strModulesDir.GetBuffer()) != 0)
   {
@@ -647,6 +648,7 @@ void CPlugInManager::InitForDir(const Str &dir)
     path += g_strModulesDir;
     // SYNAPSE
     g_pParentWnd->GetSynapseServer().AddSearchPath(path);
+    Sys_Printf("Added %s to plugin path (2)\n", path.GetBuffer());
   }
 }
 
@@ -668,7 +670,7 @@ void CPlugInManager::Init()
   // set some globals
   g_qeglobals.bBSPFrontendPlugin = false;
 
-  InitForDir(g_strGameToolsPath);
+  // InitForDir(g_strGameToolsPath);
   InitForDir(g_strAppPath);
 
   synapse_config = g_strGameToolsPath;
