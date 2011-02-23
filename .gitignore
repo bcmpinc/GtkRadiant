@@ -1,6 +1,10 @@
-/build
-/install
+/build/
+/install/
+/Debug/
+/radiant_VC9.ncb
 *.pyc
+*.user
+*.suo
 *~
 .*
 !.gitignore
